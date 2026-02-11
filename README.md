@@ -27,7 +27,7 @@ npm run build
 npm run dev
 ```
 
-4. **Open in browser:* Navigate to the localhost link provided by Vite.
+4. **Open in browser:** Navigate to the localhost link provided by Vite.
 
 ### Backend
 
