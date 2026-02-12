@@ -36,6 +36,8 @@ def create_app(config_class: Type[Config] = Config) -> Flask:
     
     # Create database tables
     with app.app_context():
+        # Temporary import before relevant service blueprint setup
+        from models import User, PickupHistory, Hold
         db.create_all()
     
     return app
