@@ -13,6 +13,28 @@ from extensions import db
 HOLD_DURATION_HOURS = 2
 
 class Hold(db.Model):
+    """
+    SQLAlchemy model representing a temporary hold on a food donation item.
+
+    A Hold is created when a recipient reserves a food item, giving them a
+    2-hour window to complete pickup before the reservation expires.
+    Holds prevent double-booking by locking a food item to a single user for
+    the duration of the hold.
+
+    Attributes:
+        id (int): Primary key, auto-incremented.
+        user_id (int): Foreign key referencing the User who placed the hold.
+        food_id (str): Identifier of the food item being held.
+        status (str): Current state of the hold. One of:
+            - "active"    – Hold is in effect; item is reserved.
+            - "completed" – Pickup was completed successfully.
+            - "expired"   – Hold window elapsed without pickup.
+            - "cancelled" – Hold was manually cancelled.
+        created_at (datetime): UTC timestamp of when the hold was created.
+        expires_at (datetime): UTC timestamp of when the hold expires
+            (``created_at`` + 2 hours by default).
+        user (User): Relationship back to the owning User.
+    """
     __tablename__ = "holds"
     
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
