@@ -8,7 +8,25 @@ from datetime import datetime, timezone
 
 from extensions import db
 
-class User(db.Model):
+class User(db.Model):    
+    """
+    SQLAlchemy model representing a registered food recipient.
+
+    A User is the central actor in the food rescue system - they browse
+    available donations, place Holds to reserve items, and accumulate
+    PickupHistory records as they complete pickups. Each User is uniquely
+    identified by their email address.
+
+    Attributes:
+        id (int): Primary key, auto-incremented.
+        email (str): Unique email address used to identify the user.
+        name (str): Display name of the user.
+        created_at (datetime): UTC timestamp of when the account was created.
+        holds (DynamicMapped[Hold]): Lazy dynamic relationship to all Holds
+            placed by this user, including active, expired, and cancelled.
+        pickups (DynamicMapped[PickupHistory]): Lazy dynamic relationship to
+            all completed pickup records associated with this user.
+    """
     __tablename__ = "users"
     
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
