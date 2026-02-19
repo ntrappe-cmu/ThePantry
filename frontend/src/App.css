@@ -35,11 +35,9 @@ button {
   --menu-bar-width: 90%;
   --menu-bar-edges: 30px;
   --menu-item-spacing: 25px;
-  --menu-icon-size: 28px;
+  --menu-icon-size: 32px;
   --menu-bar-padding: 10px 35px;
-
-  --donation-card-edges: 20px;
-  --donation-card-gap: 20px;
+  --menu-icon-text-gap: -3px;
 }
 
 @media only screen and (min-width: 768px) {

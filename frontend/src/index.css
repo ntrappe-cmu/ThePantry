@@ -1,40 +1,71 @@
+/**
+ * Global Styling - index.css
+ * 
+ * This file contains all global styles, CSS custom properties (variables),
+ * and font imports for the application. It establishes:
+ * - Color palette (backgrounds, foregrounds, borders, alerts, highlights)
+ * - Typography and font settings
+ * - Global element resets
+ * - HTML behavior defaults
+ * 
+ * Color Naming Convention:
+ * - bg-color-*: Background colors (primary = darkest, secondary, tertiary = lightest)
+ * - fg-color-*: Foreground/text colors (primary = lightest, secondary = medium, tertiary = darker)
+ * - more...
+ */
+
+/* Import custom fonts from assets */
 @import './assets/fonts/fonts.css';
 
+/* HTML defaults */
 html {
+  /* Enable smooth scrolling behavior */
   scroll-behavior: smooth;
   margin: 0;
   padding: 0;
 }
 
+/* SVG default styling */
 svg {
   fill: #313131;
 }
 
+/* Root CSS Custom Properties (design tokens) */
 :root {
+  /* Typography */
   font-family: 'SF Pro Display';
   font-weight: 300;
   font-size: 1.2em;
 
+  /* Font rendering optimization */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 
-  /* Important Globals */
-  --bg-color-primary: rgb(0, 0, 0);
-  --bg-color-secondary: #1D1D1F;
-  --bg-color-tertiary: #333336;
+  /* Color Palette - Backgrounds */
+  --bg-color-primary: rgb(0, 0, 0);        /* Main background */
+  --bg-color-secondary: #1D1D1F;           /* Secondary backgrounds like cards */
+  --bg-color-tertiary: #333336;            /* Tertiary backgrounds like banners */
 
-  --border-color-primary: #343437;
+  /* Border colors */
+  --border-color-primary: #343437;         /* Subtle border color */
 
-  --fg-color-primary: #F5F5F7;
-  --fg-color-secondary: #86868B;
-  --fg-color-tertiary: #9A9A9E;
+  /* Color Palette - Foreground/Text */
+  --fg-color-primary: #F5F5F7;             /* Main text color */
+  --fg-color-secondary: #86868B;           /* Secondary text */
+  --fg-color-tertiary: #9A9A9E;            /* Tertiary text */
 
-  --fg-color-alert: rgb(255, 66, 69);
-  --fg-color-highlight: rgb(0, 145, 255);
+  /* Semantic Colors */
+  --fg-color-alert: rgb(255, 66, 69);      /* Error/alert states */
+  --fg-color-highlight: rgb(0, 145, 255);  /* Accent/interactive/highlight */
+  --fg-color-link: rgb(0, 145, 255);
+  --fg-color-success: #5BC56B;
 }
 
+/* Global element resets */
 * {
+  /* Use border-box sizing for all elements */
   box-sizing: border-box;
+  /* Remove default margins and padding */
   margin: 0;
   padding: 0;
 }
