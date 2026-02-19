@@ -6,6 +6,10 @@ html {
   padding: 0;
 }
 
+svg {
+  fill: #313131;
+}
+
 :root {
   font-family: 'SF Pro Display';
   font-weight: 300;
@@ -22,8 +26,8 @@ html {
   --border-color-primary: #343437;
 
   --fg-color-primary: #F5F5F7;
-  --fg-color-secondary: #dedee1;
-  --fg-color-tertiary: #86868B;
+  --fg-color-secondary: #86868B;
+  --fg-color-tertiary: #9A9A9E;
 
   --fg-color-alert: rgb(255, 66, 69);
   --fg-color-highlight: rgb(0, 145, 255);
