@@ -13,6 +13,7 @@ from flask_cors import CORS
 
 from config import Config, TestConfig
 from extensions import db
+from routes import donation_bp
 from services.inventory_service import MockInventoryService
 from services.reservation_service import ReservationService
 
@@ -37,6 +38,9 @@ def create_app(config_class: Type[Config] = Config) -> Flask:
     inventory_service = MockInventoryService()
     reservation_service = ReservationService(inventory_service)
     app.config["RESERVATION_SERVICE"] = reservation_service
+    
+    # Register route blueprints
+    app.register_blueprint(donation_bp)
     
     # Health check endpoint
     @app.route('/api/health', methods=['GET'])
