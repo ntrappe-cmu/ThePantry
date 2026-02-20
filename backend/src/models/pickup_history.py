@@ -40,7 +40,7 @@ class PickupHistory(db.Model):
     # Relationships
     user = db.relationship("User", back_populates="pickups")
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """
         Serialize pickup history to a JSON-compatible dictionary.
 
