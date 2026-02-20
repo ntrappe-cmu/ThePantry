@@ -6,11 +6,15 @@ Application Factory for ThePantry API
 - Registers blueprints
 - Wires up service dependencies
 """
+from typing import Type
+
 from flask import Flask
 from flask_cors import CORS
+
 from config import Config, TestConfig
 from extensions import db
-from typing import Type
+from services.inventory_service import MockInventoryService
+from services.reservation_service import ReservationService
 
 def create_app(config_class: Type[Config] = Config) -> Flask:
     """
@@ -28,6 +32,11 @@ def create_app(config_class: Type[Config] = Config) -> Flask:
     # Initialize extensions
     CORS(app)
     db.init_app(app)
+    
+    # Wire up service dependencies
+    inventory_service = MockInventoryService()
+    reservation_service = ReservationService(inventory_service)
+    app.config["RESERVATION_SERVICE"] = reservation_service
     
     # Health check endpoint
     @app.route('/api/health', methods=['GET'])
