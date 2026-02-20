@@ -7,7 +7,7 @@ no double-booking (each donation claimed by at most one recipient).
 """
 
 from extensions import db
-from models.hold import Hold
+from models.hold import Hold, HoldStatus
 
 
 class HoldService:
@@ -28,15 +28,16 @@ class HoldService:
         Returns:
             The new Hold on success, or None if the donation is already held.
         """
-        # Check for existing active hold on this donation
-        existing = Hold.query.filter_by(donation_id=donation_id, status="active").all()
+        existing = Hold.query.filter_by(
+            donation_id=donation_id, status=HoldStatus.ACTIVE
+        ).all()
         changed = False
-        
+
         for h in existing:
             if h.is_active:
                 return None  # Donation already claimed
             else:
-                h.status = "expired"
+                h.status = HoldStatus.EXPIRED
                 changed = True
 
         if changed:
@@ -73,18 +74,19 @@ class HoldService:
         Returns:
             List of genuinely active Hold objects.
         """
-        holds = Hold.query.filter_by(user_id=user_id, status="active").all()
+        holds = Hold.query.filter_by(
+            user_id=user_id, status=HoldStatus.ACTIVE
+        ).all()
         active = []
         changed = False
-        
+
         for h in holds:
             if h.is_active:
                 active.append(h)
             else:
-                # Auto-expire stale holds
-                h.status = "expired"
+                h.status = HoldStatus.EXPIRED
                 changed = True
-        
+
         if changed:
             db.session.commit()
         return active
@@ -100,7 +102,9 @@ class HoldService:
         Returns:
             List of Hold objects ordered by created_at descending.
         """
-        return Hold.query.filter_by(user_id=user_id).order_by(Hold.created_at.desc()).all()
+        return Hold.query.filter_by(user_id=user_id).order_by(
+            Hold.created_at.desc()
+        ).all()
 
     @staticmethod
     def cancel_hold(hold_id: int) -> Hold | None:
@@ -117,7 +121,7 @@ class HoldService:
         if not hold or not hold.is_active:
             return None
 
-        hold.status = "cancelled"
+        hold.status = HoldStatus.CANCELLED
         db.session.commit()
         return hold
 
@@ -136,7 +140,7 @@ class HoldService:
         if not hold or not hold.is_active:
             return None
 
-        hold.status = "completed"
+        hold.status = HoldStatus.COMPLETED
         db.session.commit()
         return hold
 
@@ -151,19 +155,21 @@ class HoldService:
         Returns:
             Set of donation ID strings that should not be available.
         """
-        holds = Hold.query.filter(Hold.status.in_(["active", "completed"])).all()
+        holds = Hold.query.filter(
+            Hold.status.in_([HoldStatus.ACTIVE, HoldStatus.COMPLETED])
+        ).all()
         unavailable_ids = set()
         changed = False
-        
+
         for h in holds:
-            if h.status == "completed":
+            if h.status == HoldStatus.COMPLETED:
                 unavailable_ids.add(h.donation_id)
             elif h.is_active:
                 unavailable_ids.add(h.donation_id)
             else:
-                h.status = "expired"
+                h.status = HoldStatus.EXPIRED
                 changed = True
-        
+
         if changed:
             db.session.commit()
         return unavailable_ids

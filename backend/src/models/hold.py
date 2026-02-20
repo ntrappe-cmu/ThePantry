@@ -6,11 +6,21 @@ Status can be: active, completed, expired, or cancelled.
 2-hour reservation timeout.
 """
 from datetime import datetime, timezone, timedelta
+from enum import Enum
 
 from extensions import db
 
 # Hold duration in hours
 HOLD_DURATION_HOURS = 2
+
+
+class HoldStatus(Enum):
+    """Valid states for a Hold's lifecycle."""
+    ACTIVE = "active"
+    COMPLETED = "completed"
+    EXPIRED = "expired"
+    CANCELLED = "cancelled"
+
 
 class Hold(db.Model):
     """
@@ -25,28 +35,24 @@ class Hold(db.Model):
         id (int): Primary key, auto-incremented.
         user_id (int): Foreign key referencing the User who placed the hold.
         donation_id (str): Identifier of the donation being held.
-        status (str): Current state of the hold. One of:
-            - "active"    – Hold is in effect; item is reserved.
-            - "completed" – Pickup was completed successfully.
-            - "expired"   – Hold window elapsed without pickup.
-            - "cancelled" – Hold was manually cancelled.
+        status (HoldStatus): Current state of the hold.
         created_at (datetime): UTC timestamp of when the hold was created.
         expires_at (datetime): UTC timestamp of when the hold expires
             (``created_at`` + 2 hours by default).
         user (User): Relationship back to the owning User.
     """
     __tablename__ = "holds"
-    
-    id = db.Column(db.Integer, primary_key=True, autoincrement = True)
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     donation_id = db.Column(db.String(100), nullable=False)
-    status = db.Column(db.String(20), nullable = False, default="active")  # active, completed, expired, cancelled
-    created_at = db.Column(db.DateTime, nullable = False, default=lambda: datetime.now(timezone.utc))
+    status = db.Column(db.Enum(HoldStatus), nullable=False, default=HoldStatus.ACTIVE)
+    created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     expires_at = db.Column(db.DateTime, nullable=False)
-    
+
     # Relationships
     user = db.relationship("User", back_populates="holds")
-    
+
     def __init__(self, **kwargs):
         """Initialize a Hold, auto-setting created_at and expires_at if not provided.
 
@@ -59,31 +65,31 @@ class Hold(db.Model):
             now = datetime.now(timezone.utc)
             self.created_at = now
             self.expires_at = now + timedelta(hours=HOLD_DURATION_HOURS)
-            
+
     @property
-    def is_active(self):
+    def is_active(self) -> bool:
         """
         Check if hold is still active (not expired, cancelled, or completed).
-            
+
         Returns:
-            True if status is "active" and current time is before expires_at.
+            True if status is ACTIVE and current time is before expires_at.
         """
-        if self.status != "active":
+        if self.status != HoldStatus.ACTIVE:
             return False
         return datetime.now(timezone.utc) < self.expires_at.replace(tzinfo=timezone.utc)
-    
-    def to_dict(self):
+
+    def to_dict(self) -> dict:
         """
         Serialize hold to a JSON-compatible dictionary.
 
         Returns:
-            out: Dict with keys: id, userId, donationId, status, createdAt, expiresAt.
+            Dict with keys: id, userId, donationId, status, createdAt, expiresAt.
         """
         return {
             "id": self.id,
             "userId": self.user_id,
             "donationId": self.donation_id,
-            "status": self.status,
+            "status": self.status.value,
             "createdAt": self.created_at.isoformat(),
             "expiresAt": self.expires_at.isoformat(),
         }
