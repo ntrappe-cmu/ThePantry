@@ -5,7 +5,6 @@ Creates, checks, and releases temporary holds on donations.
 Enforces the 2-hour reservation timeout. Responsible for ensuring
 no double-booking (each donation claimed by at most one recipient).
 """
-from datetime import datetime, timezone
 
 from extensions import db
 from models.hold import Hold
@@ -18,15 +17,30 @@ class HoldService:
         """
         Create a new hold on a donation for a user.
 
-        Returns the new Hold, or None if the donation is already held
-        by an active reservation.
-        """
-        existing = Hold.query.filter_by(donation_id=donation_id, status="active").filter(
-            Hold.expires_at > datetime.now(timezone.utc)
-        ).first()
+        Checks all existing "active" holds for this donation. If any are
+        genuinely active (not time-expired), the request is rejected.
+        Stale holds are lazily marked as expired.
 
-        if existing:
-            return None  # Donation already claimed
+        Args:
+            user_id: ID of the user placing the hold.
+            donation_id: ID of the donation to reserve.
+
+        Returns:
+            The new Hold on success, or None if the donation is already held.
+        """
+        # Check for existing active hold on this donation
+        existing = Hold.query.filter_by(donation_id=donation_id, status="active").all()
+        changed = False
+        
+        for h in existing:
+            if h.is_active:
+                return None  # Donation already claimed
+            else:
+                h.status = "expired"
+                changed = True
+
+        if changed:
+            db.session.commit()
 
         hold = Hold(user_id=user_id, donation_id=donation_id)
         db.session.add(hold)
@@ -35,19 +49,57 @@ class HoldService:
 
     @staticmethod
     def get_hold_by_id(hold_id: int) -> Hold | None:
-        """Retrieve a single hold by ID."""
+        """
+        Retrieve a single hold by ID.
+
+        Args:
+            hold_id: Primary key of the hold.
+
+        Returns:
+            The Hold if found, or None.
+        """
         return db.session.get(Hold, hold_id)
 
     @staticmethod
     def get_active_holds_for_user(user_id: int) -> list[Hold]:
-        """Get all active (non-expired, non-cancelled) holds for a user."""
-        return Hold.query.filter_by(user_id=user_id, status="active").filter(
-            Hold.expires_at > datetime.now(timezone.utc)
-        ).all()
+        """
+        Get all active (non-expired, non-cancelled) holds for a user.
+
+        Lazily expires any stale holds encountered.
+
+        Args:
+            user_id: ID of the user.
+
+        Returns:
+            List of genuinely active Hold objects.
+        """
+        holds = Hold.query.filter_by(user_id=user_id, status="active").all()
+        active = []
+        changed = False
+        
+        for h in holds:
+            if h.is_active:
+                active.append(h)
+            else:
+                # Auto-expire stale holds
+                h.status = "expired"
+                changed = True
+        
+        if changed:
+            db.session.commit()
+        return active
 
     @staticmethod
     def get_all_holds_for_user(user_id: int) -> list[Hold]:
-        """Get all holds (any status) for a user."""
+        """
+        Get all holds (any status) for a user, newest first.
+
+        Args:
+            user_id: ID of the user.
+
+        Returns:
+            List of Hold objects ordered by created_at descending.
+        """
         return Hold.query.filter_by(user_id=user_id).order_by(Hold.created_at.desc()).all()
 
     @staticmethod
@@ -55,12 +107,14 @@ class HoldService:
         """
         Cancel an active hold, returning the donation to the available pool.
 
-        Returns the updated Hold, or None if hold not found or not active.
+        Args:
+            hold_id: Primary key of the hold to cancel.
+
+        Returns:
+            The updated Hold on success, or None if not found/not active.
         """
         hold = db.session.get(Hold, hold_id)
-        if not hold or hold.status != "active":
-            return None
-        if hold.expires_at <= datetime.now(timezone.utc):
+        if not hold or not hold.is_active:
             return None
 
         hold.status = "cancelled"
@@ -72,12 +126,14 @@ class HoldService:
         """
         Mark a hold as completed (pickup confirmed).
 
-        Returns the updated Hold, or None if hold not found or not active.
+        Args:
+            hold_id: Primary key of the hold to complete.
+
+        Returns:
+            The updated Hold on success, or None if not found/not active.
         """
         hold = db.session.get(Hold, hold_id)
-        if not hold or hold.status != "active":
-            return None
-        if hold.expires_at <= datetime.now(timezone.utc):
+        if not hold or not hold.is_active:
             return None
 
         hold.status = "completed"
@@ -87,23 +143,27 @@ class HoldService:
     @staticmethod
     def get_held_donation_ids() -> set[str]:
         """
-        Return donation IDs that are unavailable (actively held OR already picked up).
-        Completed pickups remain unavailable since the donation is gone.
+        Return donation IDs that are currently unavailable.
+
+        Includes actively held donations and completed pickups.
+        Lazily expires any stale holds encountered.
+
+        Returns:
+            Set of donation ID strings that should not be available.
         """
-        now = datetime.now(timezone.utc)
-
-        # Completed holds — donation is gone permanently
-        completed = Hold.query.filter_by(status="completed").all()
-
-        # Active holds that haven't expired yet
-        active = Hold.query.filter_by(status="active").filter(
-            Hold.expires_at > now
-        ).all()
-
+        holds = Hold.query.filter(Hold.status.in_(["active", "completed"])).all()
         unavailable_ids = set()
-        for h in completed:
-            unavailable_ids.add(h.donation_id)
-        for h in active:
-            unavailable_ids.add(h.donation_id)
-
+        changed = False
+        
+        for h in holds:
+            if h.status == "completed":
+                unavailable_ids.add(h.donation_id)
+            elif h.is_active:
+                unavailable_ids.add(h.donation_id)
+            else:
+                h.status = "expired"
+                changed = True
+        
+        if changed:
+            db.session.commit()
         return unavailable_ids

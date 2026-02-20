@@ -48,13 +48,36 @@ class Hold(db.Model):
     user = db.relationship("User", back_populates="holds")
     
     def __init__(self, **kwargs):
+        """Initialize a Hold, auto-setting created_at and expires_at if not provided.
+
+        Args:
+            **kwargs: Column values. If expires_at is omitted, it defaults
+                      to created_at + HOLD_DURATION_HOURS.
+        """
         super().__init__(**kwargs)
         if not self.expires_at:
             now = datetime.now(timezone.utc)
             self.created_at = now
             self.expires_at = now + timedelta(hours=HOLD_DURATION_HOURS)
+            
+    @property
+    def is_active(self):
+        """
+        Check if hold is still active (not expired, cancelled, or completed).
+            
+        Returns:
+            True if status is "active" and current time is before expires_at.
+        """
+        if self.status != "active":
+            return False
+        return datetime.now(timezone.utc) < self.expires_at.replace(tzinfo=timezone.utc)
     
     def to_dict(self):
+        """Serialize hold to a JSON-compatible dictionary.
+
+        Returns:
+            out: Dict with keys: id, userId, donationId, status, createdAt, expiresAt.
+        """
         return {
             "id": self.id,
             "userId": self.user_id,
