@@ -45,6 +45,10 @@ svg {
   --bg-color-primary: rgb(0, 0, 0);        /* Main background */
   --bg-color-secondary: #1D1D1F;           /* Secondary backgrounds like cards */
   --bg-color-tertiary: #333336;            /* Tertiary backgrounds like banners */
+  
+  /* Backgrounds with glass effect */
+  --bg-color-primary-glass: rgba(29, 29, 31, 0.7);
+  --bg-blur-primary: saturate(180%) blur(20px);
 
   /* Border colors */
   --border-color-primary: #343437;         /* Subtle border color */
