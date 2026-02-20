@@ -83,7 +83,7 @@ class Hold(db.Model):
         Serialize hold to a JSON-compatible dictionary.
 
         Returns:
-            Dict with keys: id, userId, donationId, status, createdAt, expiresAt.
+            out: Dict with keys: id, userId, donationId, status, createdAt, expiresAt.
         """
         return {
             "id": self.id,
