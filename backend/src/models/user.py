@@ -38,7 +38,7 @@ class User(db.Model):
     holds = db.relationship("Hold", back_populates="user", lazy="dynamic")
     pickups = db.relationship("PickupHistory", back_populates="user", lazy="dynamic")
     
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """
         Serialize user to a JSON-compatible dictionary.
 
