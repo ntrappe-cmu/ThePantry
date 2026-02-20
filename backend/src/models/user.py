@@ -39,6 +39,12 @@ class User(db.Model):
     pickups = db.relationship("PickupHistory", back_populates="user", lazy="dynamic")
     
     def to_dict(self):
+        """
+        Serialize user to a JSON-compatible dictionary.
+
+        Returns:
+            out: Dict with keys: id, email, name, createdAt
+        """
         return {
             "id": self.id,
             "email": self.email,

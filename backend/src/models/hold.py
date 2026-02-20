@@ -73,7 +73,8 @@ class Hold(db.Model):
         return datetime.now(timezone.utc) < self.expires_at.replace(tzinfo=timezone.utc)
     
     def to_dict(self):
-        """Serialize hold to a JSON-compatible dictionary.
+        """
+        Serialize hold to a JSON-compatible dictionary.
 
         Returns:
             out: Dict with keys: id, userId, donationId, status, createdAt, expiresAt.

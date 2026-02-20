@@ -41,6 +41,13 @@ class PickupHistory(db.Model):
     user = db.relationship("User", back_populates="pickups")
 
     def to_dict(self):
+        """
+        Serialize pickup history to a JSON-compatible dictionary.
+
+        Returns:
+            out: Dict with keys: id, userId, donationId, donationDescription,
+            donorContact, pickupLocation, completedAt.
+        """
         return {
             "id": self.id,
             "userId": self.user_id,
