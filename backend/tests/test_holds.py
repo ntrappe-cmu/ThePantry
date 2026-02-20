@@ -1,5 +1,16 @@
 """Tests for hold/reservation endpoints — core business logic."""
+from datetime import datetime, timezone, timedelta
+
 from conftest import create_test_user, get_first_donation_id, create_test_hold
+from models.hold import Hold, HoldStatus
+from extensions import db
+
+
+def expire_hold(hold_id):
+    """Force a hold to be expired by setting expires_at to the past."""
+    hold = db.session.get(Hold, hold_id)
+    hold.expires_at = datetime.now(timezone.utc) - timedelta(hours=1)
+    db.session.commit()
 
 
 class TestCreateHold:
@@ -128,3 +139,75 @@ class TestConfirmPickup:
 
         resp = client.post(f"/api/v1/holds/{hold_id}/pickup")
         assert resp.status_code == 404
+
+
+class TestHoldExpiration:
+    """Tests for the 2-hour hold expiration behavior."""
+
+    def test_expired_hold_excluded_from_active_list(self, client):
+        """Expired holds do not appear when listing active holds."""
+        user_id, _, hold_id = create_test_hold(client)
+        expire_hold(hold_id)
+
+        resp = client.get(f"/api/v1/holds?userId={user_id}&active=true")
+        assert resp.status_code == 200
+        assert resp.get_json() == []
+
+    def test_expired_hold_lazily_marked_in_db(self, client):
+        """Querying active holds flips stale holds to expired status."""
+        user_id, _, hold_id = create_test_hold(client)
+        expire_hold(hold_id)
+
+        # Trigger lazy expiration by querying active holds
+        client.get(f"/api/v1/holds?userId={user_id}&active=true")
+
+        # Verify status was persisted
+        hold = db.session.get(Hold, hold_id)
+        assert hold.status == HoldStatus.EXPIRED
+
+    def test_cannot_cancel_expired_hold(self, client):
+        """Cancelling an expired hold returns 404."""
+        _, _, hold_id = create_test_hold(client)
+        expire_hold(hold_id)
+
+        resp = client.delete(f"/api/v1/holds/{hold_id}")
+        assert resp.status_code == 404
+
+    def test_cannot_pickup_expired_hold(self, client):
+        """Confirming pickup on an expired hold returns 404."""
+        _, _, hold_id = create_test_hold(client)
+        expire_hold(hold_id)
+
+        resp = client.post(f"/api/v1/holds/{hold_id}/pickup")
+        assert resp.status_code == 404
+
+    def test_expired_hold_no_history_recorded(self, client):
+        """Failed pickup on expired hold does not create a history record."""
+        user_id, _, hold_id = create_test_hold(client)
+        expire_hold(hold_id)
+
+        client.post(f"/api/v1/holds/{hold_id}/pickup")
+
+        resp = client.get(f"/api/v1/history?userId={user_id}")
+        assert resp.get_json() == []
+
+    def test_donation_available_after_expiration(self, client):
+        """Expired hold releases the donation back to the available pool."""
+        _, donation_id, hold_id = create_test_hold(client)
+        expire_hold(hold_id)
+
+        donations = client.get("/api/v1/donations").get_json()
+        returned_ids = [d["id"] for d in donations]
+        assert donation_id in returned_ids
+
+    def test_rebook_after_expiration(self, client):
+        """Another user can claim a donation after the previous hold expires."""
+        user0 = create_test_user(client)
+        user1 = create_test_user(client, "user1@test.com")
+        donation_id = get_first_donation_id(client)
+
+        _, _, hold_id = create_test_hold(client, user_id=user0, donation_id=donation_id)
+        expire_hold(hold_id)
+
+        resp = client.post("/api/v1/holds", json={"userId": user1, "donationId": donation_id})
+        assert resp.status_code == 201
