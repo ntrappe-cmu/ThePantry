@@ -37,7 +37,7 @@ def client(app, db):
 # ── Shared helpers ──────────────────────────────────────────────
 
 def create_test_user(client, email="test@example.com", name="Test"):
-    """Create a user and return their ID."""
+    """Create a user via the API and return their ID."""
     resp = client.post("/api/v1/users", json={"email": email, "name": name})
     return resp.get_json()["user"]["id"]
 
@@ -48,8 +48,22 @@ def get_first_donation_id(client):
     return resp.get_json()[0]["id"]
 
 
+def create_test_hold(client, user_id=None, donation_id=None, email="hold@test.com"):
+    """Create a user (if needed), hold a donation, return (user_id, donation_id, hold_id)."""
+    if user_id is None:
+        user_id = create_test_user(client, email)
+    if donation_id is None:
+        donation_id = get_first_donation_id(client)
+
+    resp = client.post("/api/v1/holds", json={
+        "userId": user_id, "donationId": donation_id
+    })
+    hold_id = resp.get_json()["hold"]["id"]
+    return user_id, donation_id, hold_id
+
+
 def setup_completed_pickup(client, email="pickup@test.com", name="Pickup"):
-    """Create a user, hold a donation, confirm pickup. Returns user_id."""
+    """Create user, hold donation, confirm pickup. Returns (user_id, donation_id)."""
     user_id = create_test_user(client, email, name)
     donation_id = get_first_donation_id(client)
 
@@ -58,4 +72,4 @@ def setup_completed_pickup(client, email="pickup@test.com", name="Pickup"):
     })
     hold_id = hold_resp.get_json()["hold"]["id"]
     client.post(f"/api/v1/holds/{hold_id}/pickup")
-    return user_id
+    return user_id, donation_id
