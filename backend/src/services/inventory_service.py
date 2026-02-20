@@ -1,5 +1,5 @@
 """
-Inventory Adapter
+Inventory Service
 
 Wraps the external Donation Inventory Service API and translates external
 data into our internal Donation format.
