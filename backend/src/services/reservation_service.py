@@ -120,10 +120,11 @@ class ReservationService:
         """
         Mark a hold as completed and write a permanent pickup record.
 
-        Looks up the active hold, completes it, then passes donation details
-        from inventory to HistoryService to create an audit trail entry.
-        Donation details are stored defensively — if the donation no longer
-        exists in inventory, the history record is still created with nulls.
+        Verifies the hold exists and is still active before completing it.
+        Passes donation details from inventory to HistoryService to create
+        an audit trail entry. Donation details are stored defensively — if the
+        donation no longer exists in inventory, the history record is still
+        created with nulls.
 
         Args:
             hold_id: ID of the hold being fulfilled.
@@ -133,14 +134,16 @@ class ReservationService:
                  On failure: ``{"success": False, "error": "<reason>"}``
         """
         hold = HoldService.get_hold_by_id(hold_id)
-        if not hold:
+        if not hold or not hold.is_active:
             return {"success": False, "error": "No active hold found"}
+        
+        # Complete the hold (returns None if it raced and expired between check and here)
+        completed = HoldService.complete_hold(hold_id)
+        if not completed:
+            return {"success": False, "error": "Hold expired before pickup could be confirmed"}
         
         # Look up donation details to store in history
         donation = self.inventory.get_donation_by_id(hold.donation_id)
-        
-        # Complete the hold
-        HoldService.complete_hold(hold_id)
         
         # Record in history
         record = HistoryService.record_pickup(
