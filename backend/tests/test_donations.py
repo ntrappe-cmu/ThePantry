@@ -1,4 +1,5 @@
 """Tests for donation listing endpoints."""
+from conftest import create_test_user, get_first_donation_id
 
 
 class TestDonationEndpoints:
@@ -21,8 +22,7 @@ class TestDonationEndpoints:
 
     def test_held_donations_excluded_by_default(self, client):
         """Default listing omits donations with an active hold."""
-        user_resp = client.post("/api/v1/users", json={"email": "a@test.com", "name": "A"})
-        user_id = user_resp.get_json()["user"]["id"]
+        user_id = create_test_user(client)
 
         donations = client.get("/api/v1/donations").get_json()
         donation_id = donations[0]["id"]
@@ -35,11 +35,8 @@ class TestDonationEndpoints:
 
     def test_show_all_includes_held_with_flag(self, client):
         """showAll=true includes held donations with isHeld=True."""
-        user_resp = client.post("/api/v1/users", json={"email": "b@test.com", "name": "B"})
-        user_id = user_resp.get_json()["user"]["id"]
-
-        donations = client.get("/api/v1/donations").get_json()
-        donation_id = donations[0]["id"]
+        user_id = create_test_user(client)
+        donation_id = get_first_donation_id(client)
 
         client.post("/api/v1/holds", json={"userId": user_id, "donationId": donation_id})
 
@@ -59,8 +56,7 @@ class TestDonationEndpoints:
 
     def test_donation_unavailable_after_pickup(self, client):
         """A picked-up donation does not reappear in the available list."""
-        user_resp = client.post("/api/v1/users", json={"email": "c@test.com", "name": "C"})
-        user_id = user_resp.get_json()["user"]["id"]
+        user_id = create_test_user(client)
 
         donations = client.get("/api/v1/donations").get_json()
         donation_id = donations[0]["id"]
