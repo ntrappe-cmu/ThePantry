@@ -1,7 +1,7 @@
 """
 User Model
 
-Represents a registered food recipient who can browse donations,
+Represents a registered donation recipient who can browse donations,
 place holds, and track pickup history. 
 """
 from datetime import datetime, timezone
@@ -10,9 +10,9 @@ from extensions import db
 
 class User(db.Model):    
     """
-    SQLAlchemy model representing a registered food recipient.
+    SQLAlchemy model representing a registered donation recipient.
 
-    A User is the central actor in the food rescue system - they browse
+    A User is the central actor in the system - they browse
     available donations, place Holds to reserve items, and accumulate
     PickupHistory records as they complete pickups. Each User is uniquely
     identified by their email address.

@@ -1,7 +1,7 @@
 """
 Hold Model
 
-Represents a temporary reservation on a food donation. 
+Represents a temporary reservation on a donation. 
 Status can be: active, completed, expired, or cancelled.
 2-hour reservation timeout.
 """
@@ -14,11 +14,11 @@ HOLD_DURATION_HOURS = 2
 
 class Hold(db.Model):
     """
-    SQLAlchemy model representing a temporary hold on a food donation item.
+    SQLAlchemy model representing a temporary hold on a donation item.
 
-    A Hold is created when a recipient reserves a food item, giving them a
+    A Hold is created when a recipient reserves a donation item, giving them a
     2-hour window to complete pickup before the reservation expires.
-    Holds prevent double-booking by locking a food item to a single user for
+    Holds prevent double-booking by locking a donation item to a single user for
     the duration of the hold.
 
     Attributes:

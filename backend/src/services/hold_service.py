@@ -88,11 +88,11 @@ class HoldService:
     def get_held_donation_ids() -> set[str]:
         """
         Return donation IDs that are unavailable (actively held OR already picked up).
-        Completed pickups remain unavailable since the food is gone.
+        Completed pickups remain unavailable since the donation is gone.
         """
         now = datetime.now(timezone.utc)
 
-        # Completed holds — food is gone permanently
+        # Completed holds — donation is gone permanently
         completed = Hold.query.filter_by(status="completed").all()
 
         # Active holds that haven't expired yet

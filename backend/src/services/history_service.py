@@ -2,7 +2,7 @@
 History Service
 
 Stores and retrieves chronological record of a user's completed
-food pickups.
+donation pickups.
 """
 from extensions import db
 from models.pickup_history import PickupHistory
@@ -14,7 +14,7 @@ class HistoryService:
     def record_pickup(
         user_id: int,
         donation_id: str,
-        food_description: str | None = None,
+        donation_description: str | None = None,
         donor_contact: str | None = None,
         pickup_location: str | None = None,
     ) -> PickupHistory:
@@ -24,7 +24,7 @@ class HistoryService:
         record = PickupHistory(
             user_id=user_id,
             donation_id=donation_id,
-            food_description=food_description,
+            donation_description=donation_description,
             donor_contact=donor_contact,
             pickup_location=pickup_location,
         )
