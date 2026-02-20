@@ -2,6 +2,9 @@
 
 Description TBD
 
+> [!NOTE]
+> **Questions?** Check the [Wiki](https://github.com/ntrappe-cmu/ThePantry/wiki).
+
 ## Quick Start
 
 ### Frontend 
