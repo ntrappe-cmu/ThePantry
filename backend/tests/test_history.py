@@ -14,7 +14,7 @@ class TestHistoryEndpoints:
 
     def test_history_after_pickup(self, client):
         """Completed pickup appears in history with donation details."""
-        user_id = setup_completed_pickup(client)
+        user_id, _ = setup_completed_pickup(client)
 
         resp = client.get(f"/api/v1/history?userId={user_id}")
         assert resp.status_code == 200
