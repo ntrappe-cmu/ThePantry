@@ -11,11 +11,11 @@ from typing import Type
 from flask import Flask
 from flask_cors import CORS
 
-from config import Config, TestConfig
+from config import Config
 from extensions import db
-from routes import donation_bp
-from services.inventory_service import MockInventoryService
-from services.reservation_service import ReservationService
+from routes import donation_bp, user_bp, history_bp, hold_bp
+from services import MockInventoryService
+from services import ReservationService
 
 def create_app(config_class: Type[Config] = Config) -> Flask:
     """
@@ -41,6 +41,9 @@ def create_app(config_class: Type[Config] = Config) -> Flask:
     
     # Register route blueprints
     app.register_blueprint(donation_bp)
+    app.register_blueprint(user_bp)
+    app.register_blueprint(history_bp)
+    app.register_blueprint(hold_bp)
     
     # Health check endpoint
     @app.route('/api/health', methods=['GET'])
@@ -49,8 +52,6 @@ def create_app(config_class: Type[Config] = Config) -> Flask:
     
     # Create database tables
     with app.app_context():
-        # Temporary import before relevant service blueprint setup
-        from models import User, PickupHistory, Hold
         db.create_all()
     
     return app
