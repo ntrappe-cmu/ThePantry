@@ -18,7 +18,7 @@ class PickupHistory(db.Model):
     Attributes:
         id (int): Primary key, auto-incremented.
         user_id (int): Foreign key referencing the User who completed the pickup.
-        food_id (str): Identifier of the food item that was picked up.
+        donation_id (str): Identifier of the donation_id that was picked up.
         food_description (str, optional): Human-readable description of the food item.
         donor_contact (str, optional): Contact information for the donor.
         pickup_location (str, optional): Address or description of the pickup location.
@@ -29,7 +29,7 @@ class PickupHistory(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    food_id = db.Column(db.String(100), nullable=False)
+    donation_id = db.Column(db.String(100), nullable=False)
     food_description = db.Column(db.String(500), nullable=True)
     donor_contact = db.Column(db.String(255), nullable=True)
     pickup_location = db.Column(db.String(500), nullable=True)
@@ -44,7 +44,7 @@ class PickupHistory(db.Model):
         return {
             "id": self.id,
             "userId": self.user_id,
-            "foodId": self.food_id,
+            "donationId": self.donation_id,
             "foodDescription": self.food_description,
             "donorContact": self.donor_contact,
             "pickupLocation": self.pickup_location,

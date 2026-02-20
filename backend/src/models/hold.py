@@ -24,7 +24,7 @@ class Hold(db.Model):
     Attributes:
         id (int): Primary key, auto-incremented.
         user_id (int): Foreign key referencing the User who placed the hold.
-        food_id (str): Identifier of the food item being held.
+        donation_id (str): Identifier of the donation being held.
         status (str): Current state of the hold. One of:
             - "active"    – Hold is in effect; item is reserved.
             - "completed" – Pickup was completed successfully.
@@ -39,7 +39,7 @@ class Hold(db.Model):
     
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    food_id = db.Column(db.String(100), nullable=False)
+    donation_id = db.Column(db.String(100), nullable=False)
     status = db.Column(db.String(20), nullable = False, default="active")  # active, completed, expired, cancelled
     created_at = db.Column(db.DateTime, nullable = False, default=lambda: datetime.now(timezone.utc))
     expires_at = db.Column(db.DateTime, nullable=False)
@@ -58,7 +58,7 @@ class Hold(db.Model):
         return {
             "id": self.id,
             "userId": self.user_id,
-            "foodId": self.food_id,
+            "donationId": self.donation_id,
             "status": self.status,
             "createdAt": self.created_at.isoformat(),
             "expiresAt": self.expires_at.isoformat(),

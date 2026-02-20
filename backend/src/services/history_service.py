@@ -13,7 +13,7 @@ class HistoryService:
     @staticmethod
     def record_pickup(
         user_id: int,
-        food_id: str,
+        donation_id: str,
         food_description: str | None = None,
         donor_contact: str | None = None,
         pickup_location: str | None = None,
@@ -23,7 +23,7 @@ class HistoryService:
         """
         record = PickupHistory(
             user_id=user_id,
-            food_id=food_id,
+            donation_id=donation_id,
             food_description=food_description,
             donor_contact=donor_contact,
             pickup_location=pickup_location,

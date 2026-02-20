@@ -14,21 +14,21 @@ from models.hold import Hold
 class HoldService:
 
     @staticmethod
-    def create_hold(user_id: int, food_id: str) -> Hold | None:
+    def create_hold(user_id: int, donation_id: str) -> Hold | None:
         """
         Create a new hold on a donation for a user.
 
         Returns the new Hold, or None if the donation is already held
         by an active reservation.
         """
-        existing = Hold.query.filter_by(food_id=food_id, status="active").filter(
+        existing = Hold.query.filter_by(donation_id=donation_id, status="active").filter(
             Hold.expires_at > datetime.now(timezone.utc)
         ).first()
 
         if existing:
             return None  # Donation already claimed
 
-        hold = Hold(user_id=user_id, food_id=food_id)
+        hold = Hold(user_id=user_id, donation_id=donation_id)
         db.session.add(hold)
         db.session.commit()
         return hold
@@ -85,9 +85,9 @@ class HoldService:
         return hold
 
     @staticmethod
-    def get_held_food_ids() -> set[str]:
+    def get_held_donation_ids() -> set[str]:
         """
-        Return food IDs that are unavailable (actively held OR already picked up).
+        Return donation IDs that are unavailable (actively held OR already picked up).
         Completed pickups remain unavailable since the food is gone.
         """
         now = datetime.now(timezone.utc)
@@ -102,8 +102,8 @@ class HoldService:
 
         unavailable_ids = set()
         for h in completed:
-            unavailable_ids.add(h.food_id)
+            unavailable_ids.add(h.donation_id)
         for h in active:
-            unavailable_ids.add(h.food_id)
+            unavailable_ids.add(h.donation_id)
 
         return unavailable_ids
