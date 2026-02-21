@@ -7,7 +7,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest --"
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest --"
   },
   "dependencies": {
     "cypress": "^15.10.0",

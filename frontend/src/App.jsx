@@ -42,7 +42,7 @@ function App() {
   const handleLogin = (credentials) => {
     // Validate with backend ...
     setIsAuthenticated(true);
-    localStorage.setItem('iisAuthenticated', 'true');
+    localStorage.setItem('isAuthenticated', 'true');
   }
 
   /**

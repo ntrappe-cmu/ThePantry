@@ -1,8 +1,12 @@
-// To treat .js files as ES modules in Jest
+// Jest configuration for ES modules
+process.env.NODE_OPTIONS = '--experimental-vm-modules';
+
 module.exports = {
-  testMatch: ["**/tests/jest/**/*.js"],
-  transform: {
-    '^.+\\.js$': 'babel-jest',
-  },
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
+  transform: {},
+  testMatch: ['**/tests/jest/**/*.test.js'],
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/*.jsx',
+  ],
 };

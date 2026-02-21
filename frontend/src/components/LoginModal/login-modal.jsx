@@ -86,7 +86,7 @@ function LoginModal({ formData, onInputChange, onSubmit, isLoading, isLocked }) 
       <h3>Sign in to The Pantry</h3>
 
       <StyledCredentialsWrapper >
-        {/* Email Input */}
+        {/* Email Input -- ex 'test@example.com' */}
         <input
           type="email"
           name="email"
@@ -96,7 +96,7 @@ function LoginModal({ formData, onInputChange, onSubmit, isLoading, isLocked }) 
           onChange={onInputChange}
           disabled={isLocked || isLoading}
         />
-        {/* Password Input */}
+        {/* Password Input - ex '123456' */}
         <input
           type="password"
           name="password"

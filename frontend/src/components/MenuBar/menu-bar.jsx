@@ -108,16 +108,16 @@ function MenuBar({ activeView = VIEWS.HOME, onNavigate = () => {} }) {
       </MenuBarOption>
       
       {/* History Navigation Button */}
-      <MenuBarOption className={`menu-option-history ${activeView === VIEWS.HISTORY ? 'selected' : ''}`} onClick={() => onNavigate(VIEWS.HISTORY)}>
+      {/* <MenuBarOption className={`menu-option-history ${activeView === VIEWS.HISTORY ? 'selected' : ''}`} onClick={() => onNavigate(VIEWS.HISTORY)}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m480-256.16 146.15-146.15L584-444.46l-74 74v-178h-60v178l-74-74-42.15 42.15L480-256.16ZM215.39-140q-29.93 0-52.66-22.73Q140-185.46 140-215.39v-464.38q0-12.84 4.12-24.5 4.11-11.65 12.34-21.5l56.16-67.92q9.84-12.85 24.61-19.58Q252-820 268.46-820h422.31q16.46 0 31.42 6.73T747-793.69L803.54-725q8.23 9.85 12.34 21.69 4.12 11.85 4.12 24.7v463.22q0 29.93-22.73 52.66Q774.54-140 744.61-140H215.39Zm.23-563.84H744l-43.62-51.93q-1.92-1.92-4.42-3.08-2.5-1.15-5.19-1.15H268.85q-2.69 0-5.2 1.15-2.5 1.16-4.42 3.08l-43.61 51.93Z"/></svg>
         <h3>{capitalize(VIEWS.HISTORY)}</h3>
-      </MenuBarOption>
+      </MenuBarOption> */}
       
       {/* Account Navigation Button */}
-      <MenuBarOption className={`menu-option-account ${activeView === VIEWS.ACCOUNT ? 'selected' : ''}`} onClick={() => onNavigate(VIEWS.ACCOUNT)}>
+      {/* <MenuBarOption className={`menu-option-account ${activeView === VIEWS.ACCOUNT ? 'selected' : ''}`} onClick={() => onNavigate(VIEWS.ACCOUNT)}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M572.08-476.38Q610-514.31 610-568.46t-37.92-92.08q-37.93-37.92-92.08-37.92t-92.08 37.92Q350-622.61 350-568.46t37.92 92.08q37.93 37.92 92.08 37.92t92.08-37.92ZM212.31-140Q182-140 161-161q-21-21-21-51.31v-535.38Q140-778 161-799q21-21 51.31-21h535.38Q778-820 799-799q21 21 21 51.31v535.38Q820-182 799-161q-21 21-51.31 21H212.31Zm-3.85-60h543.08q4.23-4.15 5.77-18.58 1.54-14.42 2.69-19.73-54-53-125.5-83.5T480-352.31q-83 0-154.5 30.5T200-238.31q1.15 5.31 2.69 19.73 1.54 14.43 5.77 18.58Z"/></svg>
         <h3>{capitalize(VIEWS.ACCOUNT)}</h3>
-      </MenuBarOption>
+      </MenuBarOption> */}
     </StyledMenuBarWrapper>
   );
 }

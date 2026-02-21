@@ -27,7 +27,7 @@ export const loginUser = async (email, password) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // STUB: Simulate some test credentials
-    if (email === 'test@example.com' && password === '123') {
+    if (email === 'test@example.com' && password === '123456') {
       return {
         success: true,
         token: 'fake-jwt-token-' + Date.now(),
