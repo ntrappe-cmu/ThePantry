@@ -3,12 +3,15 @@ name: Lint Frontend
 on:
   push:
     branches:
-      - '**'        # Matches all branches
-      - '!main'      # Excludes main
-      - '!docs'      # Excludes docs
+      - '**'
+      - '!main'
+      - '!docs'
     paths:
-      - 'frontend/**'                     # Only runs if files in frontend/ change
-      - '.github/workflows/linting.yml'   # Runs if the workflow itself is edited
+      - 'frontend/**'
+      - '.github/workflows/linting.yml'
+
+permissions:
+  contents: read
 
 jobs:
   lint:
@@ -22,12 +25,14 @@ jobs:
         with:
           node-version: '24'
           cache: 'npm'
-          cache-dependency-path: 'frontend/package-lock.json'
+          # Points to the lockfile inside frontend
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
 
-      - name: Run JS & React Lint
+      - name: Run Linting
         working-directory: frontend
+        # This runs the combined JS and CSS check we put in your package.json
         run: npm run lint
