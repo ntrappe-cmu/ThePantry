@@ -18,9 +18,11 @@ jobs:
           node-version: '24' # Matching your local version
 
       - name: Install dependencies
+        working-directory: frontend
         run: npm install
 
       - name: Generate Documentation
+        working-directory: frontend
         run: npx jsdoc -c jsdoc.json
 
       - name: Deploy to docs branch
