@@ -1,0 +1,33 @@
+name: Lint Frontend Changes
+
+on:
+  push:
+    branches:
+      - '**'        # Matches all branches
+      - '!main'      # Excludes main
+      - '!docs'      # Excludes docs
+    paths:
+      - 'frontend/**'                     # Only runs if files in frontend/ change
+      - '.github/workflows/linting.yml'   # Runs if the workflow itself is edited
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run JS & React Lint
+        run: npm run lint
