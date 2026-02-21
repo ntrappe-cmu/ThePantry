@@ -20,6 +20,7 @@ import { EVENTS } from '../../constants/events.js';
  * Uses backdrop blur effect and semi-transparent background for a glassmorphism effect
  */
 const StyledMenuBarWrapper = styled.nav`
+  display: flex;
   width: fit-content;
   max-width: var(--menu-bar-width);
   background-color: var(--bg-color-primary-glass);
@@ -30,7 +31,7 @@ const StyledMenuBarWrapper = styled.nav`
   transition-property: background-color,backdrop-filter,-webkit-backdrop-filter;
   border: 1px solid var(--border-color-primary);
   position: absolute;
-  bottom: 5px;
+  bottom: var(--menu-bar-gap);
   left: 50%; /* centers horizontally */
   transform: translateX(-50%); /* centers */
   padding: var(--menu-bar-padding);

@@ -4,6 +4,7 @@ body {
 }
 
 #root {
+  position: relative;
   height: 100%;
   background-color: var(--bg-color-primary);
   color: var(--fg-color-primary);
@@ -13,10 +14,12 @@ body {
 }
 
 .scrollable-container {
-  /* Set a fixed height to contain content and enable internal scrolling */
-  height: 100vh;
+  /* Remaining screen height after nav bar, with internal scrolling */
+  height: calc(100vh - var(--nav-bar-height));
+  margin-top: var(--nav-bar-height);
   overflow-y: auto; /* Show scrollbar only when needed */
   overflow-x: hidden; /* Prevent horizontal scroll */
+  border: 1px solid red;
 }
 
 h3 {
@@ -32,12 +35,17 @@ button {
 
 :root {
   --menu-bar-height: 2.5rem;
+  --menu-bar-gap: 5px;
   --menu-bar-width: 90%;
   --menu-bar-edges: 30px;
   --menu-item-spacing: 25px;
   --menu-icon-size: 32px;
   --menu-bar-padding: 10px 35px;
   --menu-icon-text-gap: -3px;
+
+  --nav-bar-height: 2.4rem;
+  --nav-bar-width: 100%;
+  --nav-bar-padding: 10px;
 }
 
 @media only screen and (min-width: 768px) {
