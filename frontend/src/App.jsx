@@ -13,41 +13,33 @@
  * - Manage loading/error states for API calls
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 import MenuBar from './components/MenuBar/menu-bar';
-import { EVENTS } from './constants/events.js';
+import { VIEWS } from './constants/views.js';
 
 
 function App() {
   // Tracks which view/page should be displayed to the user
-  const [currentView, setCurrentView] = useState('home');
+  const [currentView, setCurrentView] = useState(VIEWS.HOME);
 
-  useEffect(() => {
-    /**
-     * Listen for menuBarSwitch events from MenuBar component
-     * Updates the current view when a menu item is clicked
-     */
-    const handleMenuSwitch = (event) => {
-      const { view } = event.detail;
-      setCurrentView(view);
-      console.log(`Switched to view: ${view}`);
-    };
-
-    document.addEventListener(EVENTS.NAVIGATION_CHANGED, handleMenuSwitch);
-
-    // Cleanup: remove event listener on component unmount
-    return () => {
-      document.removeEventListener(EVENTS.NAVIGATION_CHANGED, handleMenuSwitch);
-    };
-  }, []);
+  /**
+   * Handle navigation view changes from MenuBar component
+   * Updates the current view state when user clicks a menu item
+   * 
+   * @param {string} view - The view name to switch to (from VIEWS constants)
+   */
+  const handleNavigate = (view) => {
+    setCurrentView(view);
+    console.log(`Switched to view: ${view}`);
+  };
 
   return (
     <>
       <div className='scrollable-container'>
         {/* Cards go here */}
       </div>
-      <MenuBar />
+      <MenuBar activeView={currentView} onNavigate={handleNavigate} />
     </>
   );
 }
