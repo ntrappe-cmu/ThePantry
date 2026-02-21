@@ -20,6 +20,8 @@ import { VIEWS } from './constants/views.js';
 import LoginView from './views/LoginView';
 import HomeView from './views/HomeView';
 import OrdersView from './views/OrdersView';
+import NavBar from './components/NavBar/nav-bar';
+
 
 function App() {
   // Checks whether user is logged in
@@ -71,6 +73,7 @@ function App() {
 
   return (
     <>
+      <NavBar />
       <div className='scrollable-container'>
         {viewMap[currentView]}
       </div>

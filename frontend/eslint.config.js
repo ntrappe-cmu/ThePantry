@@ -1,13 +1,15 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from '@eslint/js';
+import react from 'eslint-plugin-react';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'tests']),
   {
     files: ['**/*.{js,jsx}'],
+    plugins: { react: react, },
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
@@ -23,7 +25,19 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      "indent": ["warn", 2],
+      "no-unused-vars": "warn",      // Don't fail build for unused variables
+      "no-console": "off",           // Allow console.log for debugging
+      "react/prop-types": "off",     // Turn off prop-types (common in weak setups)
+      "react-hooks/rules-of-hooks": "error", // Keep this as error (it breaks React)
+      "react-hooks/exhaustive-deps": "warn",  // Only warn about dependency arrays
+      "react/jsx-indent": ["warn", 2],
+      "react/jsx-indent-props": ["warn", 2],
+    },
+    settings: {
+      react: {
+        version: "detect"
+      },
     },
   },
 ])

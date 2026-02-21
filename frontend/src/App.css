@@ -4,18 +4,19 @@ body {
 }
 
 #root {
+  position: relative;
   height: 100%;
   background-color: var(--bg-color-primary);
   color: var(--fg-color-primary);
   max-width: 400px;
   margin: auto;
   height: 100vh;
-  border: 1px solid green;
 }
 
 .scrollable-container {
-  /* Set a fixed height to contain content and enable internal scrolling */
-  height: 100vh;
+  /* Remaining screen height after nav bar, with internal scrolling */
+  height: calc(100vh - var(--nav-bar-height));
+  margin-top: var(--nav-bar-height);
   overflow-y: auto; /* Show scrollbar only when needed */
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
@@ -47,6 +48,7 @@ input {
 
 :root {
   --menu-bar-height: 2.5rem;
+  --menu-bar-gap: 5px;
   --menu-bar-width: 90%;
   --menu-bar-edges: 30px;
   --menu-item-spacing: 25px;
@@ -63,6 +65,9 @@ input {
   --login-button-edges: 8px;
   --login-button-width: 60%;
 
+  --nav-bar-height: 2.4rem;
+  --nav-bar-width: 100%;
+  --nav-bar-padding: 10px;
 }
 
 @media only screen and (min-width: 768px) {

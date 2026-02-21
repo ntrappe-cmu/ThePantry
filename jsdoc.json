@@ -1,0 +1,13 @@
+{
+  "source": {
+    "include": ["frontend/"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "exclude": ["frontend/node_modules"], 
+    "excludePattern": "(^|\\/|\\\\)node_modules"
+  },
+  "opts": {
+    "destination": "./out",
+    "recurse": true,
+    "readme": "README.md"
+  }
+}
