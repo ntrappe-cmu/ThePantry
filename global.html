@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Global</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Global</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="EVENTS"><span class="type-signature">(constant) </span>EVENTS<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    constants/events.js
+
+Centralized event name registry for custom DOM events dispatched throughout the application.
+This file serves as the single source of truth for event names, preventing typos and making
+events discoverable across the codebase.
+
+Naming Convention: FEATURE_ACTION
+- FEATURE: The domain/component triggering the event (e.g., USER, NAVIGATION, HOLD)
+- ACTION: The past-tense action that occurred (e.g., LOGIN_ATTEMPT, CHANGED, STATUS_CHANGED)
+- Format: UPPER_SNAKE_CASE
+
+Usage:
+  import { EVENTS } from './constants/events';
+  document.dispatchEvent(new CustomEvent(EVENTS.USER_LOGIN_ATTEMPT, { detail: {...} }));
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="constants_events.js.html">constants/events.js</a>, <a href="constants_events.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="MenuBarOption"><span class="type-signature">(constant) </span>MenuBarOption<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Styled button component for individual menu options
+Includes:
+- Smooth color and fill transitions (0.3s ease) for visual feedback
+- Selected state styling with highlight color
+- SVG icon styling with smooth transitions
+- Responsive spacing between menu items
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="StyledMenuBarWrapper"><span class="type-signature">(constant) </span>StyledMenuBarWrapper<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Styled wrapper for the menu bar container
+Uses backdrop blur effect and semi-transparent background for a glassmorphism effect
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line22">line 22</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="MenuBar"><span class="type-signature"></span>MenuBar<span class="signature">()</span><span class="type-signature"> &rarr; {React.ReactElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    MenuBar Component
+
+Manages navigation state and dispatches custom events to notify other components
+of view changes. Each menu option updates the internal state and emits a 'menuBarSwitch'
+event with the selected view.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The menu bar navigation element
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">React.ReactElement</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EVENTS">EVENTS</a></li><li><a href="global.html#MenuBar">MenuBar</a></li><li><a href="global.html#MenuBarOption">MenuBarOption</a></li><li><a href="global.html#StyledMenuBarWrapper">StyledMenuBarWrapper</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat Feb 21 2026 21:35:43 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
