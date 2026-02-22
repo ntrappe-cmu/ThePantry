@@ -46,7 +46,7 @@ def create_app(config_class: Type[Config] = Config) -> Flask:
     app.register_blueprint(hold_bp)
     
     # Health check endpoint
-    @app.route('/api/health', methods=['GET'])
+    @app.route('/api/v1/health', methods=['GET'])
     def health():
         return {"status": "ok"}
     

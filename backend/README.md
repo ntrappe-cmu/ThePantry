@@ -11,9 +11,12 @@ pip install -r requirements.txt
 python src/app.py
 ```
 
-Server runs on `http://localhost:5000`. Database (`the_pantry.db`) is auto-created on first run via SQLite.
+## Live Server
 
-For MySQL in production:
+Production: `http://17423-team03.s3d.cmu.edu`
+Same endpoints as below — e.g. `http://17423-team03.s3d.cmu.edu/api/v1/donations`
+
+Currently using SQLite in production. To switch to MySQL later:
 ```bash
 export DATABASE_URL="mysql+pymysql://user:pass@localhost/the_pantry"
 ```
@@ -78,7 +81,7 @@ Error responses follow the shape: `{ "error": "<message>" }`
 
 ### Health
 
-#### `GET /api/health`
+#### `GET /api/v1/health`
 
 Server health check. No auth required.
 
