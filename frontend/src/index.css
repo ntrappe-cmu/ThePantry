@@ -63,6 +63,12 @@ svg {
   --fg-color-highlight: rgb(0, 145, 255);  /* Accent/interactive/highlight */
   --fg-color-link: rgb(0, 145, 255);
   --fg-color-success: #5BC56B;
+
+  /* Progress Bar Global Vars! */
+  --bg-progress-track: var(--bg-color-tertiary); /* The grey background */
+  --gradient-progress: linear-gradient(90deg, #5BC56B 0%, #7EEB4C 100%);
+  --progress-bar-height: 15px;
+  --progress-bar-radius: 15px;
 }
 
 /* Global element resets */
