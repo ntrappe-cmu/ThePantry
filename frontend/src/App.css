@@ -19,7 +19,6 @@ body {
 .scrollable-container {
   /* Remaining screen height after nav bar, with internal scrolling */
   height: calc(100vh - var(--nav-bar-height));
-  /* content is already offset by #root padding-top */
   overflow-y: auto; /* Show scrollbar only when needed */
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
@@ -59,6 +58,10 @@ input {
   --menu-bar-padding: 10px 35px;
   --menu-icon-text-gap: -3px;
 
+  --nav-bar-height: 2.4rem;
+  --nav-bar-width: 100%;
+  --nav-bar-padding: 10px;
+  
   --login-modal-width: 80%;
   --login-input-edges: 8px;
   --login-input-padding: 12px;
@@ -67,10 +70,6 @@ input {
   --login-button-padding: 8px 10px;
   --login-button-edges: 8px;
   --login-button-width: 60%;
-
-  --nav-bar-height: 2.4rem;
-  --nav-bar-width: 100%;
-  --nav-bar-padding: 10px;
 }
 
 @media only screen and (min-width: 768px) {
