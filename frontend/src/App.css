@@ -70,6 +70,11 @@ input {
   --login-button-padding: 8px 10px;
   --login-button-edges: 8px;
   --login-button-width: 60%;
+
+  --item-info-gap: 12px;
+  --item-info-image-size: 64px;
+  --item-info-image-radius: 12px;
+  --item-info-content-gap: 4px;
 }
 
 @media only screen and (min-width: 768px) {
