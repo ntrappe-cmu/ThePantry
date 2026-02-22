@@ -30,6 +30,13 @@ svg {
   fill: #313131;
 }
 
+/* Input default styling */
+input { 
+  outline: none;
+  background: none;
+  border: none;
+}
+
 /* Root CSS Custom Properties (design tokens) */
 :root {
   /* Typography */
@@ -63,6 +70,11 @@ svg {
   --fg-color-highlight: rgb(0, 145, 255);  /* Accent/interactive/highlight */
   --fg-color-link: rgb(0, 145, 255);
   --fg-color-success: #5BC56B;
+
+  /* Button Colors */
+  --btn-color-primary: rgb(0, 145, 255);
+  --btn-color-success: rgb(0, 255, 123);
+  --btn-color-disabled: rgba(0, 145, 255, 0.5);
 }
 
 /* Global element resets */

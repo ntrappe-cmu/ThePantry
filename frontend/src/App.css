@@ -10,6 +10,7 @@ body {
   max-width: 400px;
   margin: auto;
   height: 100vh;
+  border: 1px solid green;
 }
 
 .scrollable-container {
@@ -20,14 +21,28 @@ body {
 }
 
 h3 {
-  font-size: 1.2em;
-  font-weight: 400;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 1.1em;
+  font-weight: 600;
+  letter-spacing: .15px;
 }
 
 button {
   background: none;
   border: none;
   cursor: pointer;
+  font-size: 0.7em;
+}
+
+input {
+  font-family: 'SF Pro Display';
+  font-size: 0.8em;
+  font-weight: 400;
+  letter-spacing: .05px;
 }
 
 :root {
@@ -38,6 +53,16 @@ button {
   --menu-icon-size: 32px;
   --menu-bar-padding: 10px 35px;
   --menu-icon-text-gap: -3px;
+
+  --login-modal-width: 80%;
+  --login-input-edges: 8px;
+  --login-input-padding: 12px;
+  --login-text-input-gap: 25px;
+  --login-button-input-gap: 50px;
+  --login-button-padding: 8px 10px;
+  --login-button-edges: 8px;
+  --login-button-width: 60%;
+
 }
 
 @media only screen and (min-width: 768px) {
