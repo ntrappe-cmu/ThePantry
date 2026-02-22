@@ -11,9 +11,13 @@ pip install -r requirements.txt
 python src/app.py
 ```
 
-Server runs on `http://localhost:5000`. Database (`the_pantry.db`) is auto-created on first run via SQLite.
+## Live Server
 
-For MySQL in production:
+Production: `http://17423-team03.s3d.cmu.edu`
+Same endpoints as below — e.g. `http://17423-team03.s3d.cmu.edu/api/v1/donations`
+Frontend is served from the same origin, so use relative paths (e.g. `fetch("/api/v1/donations")`).
+
+Currently using SQLite in production. To switch to MySQL later:
 ```bash
 export DATABASE_URL="mysql+pymysql://user:pass@localhost/the_pantry"
 ```
@@ -51,7 +55,159 @@ backend/
     └── test_users.py
 ```
 
-**Architecture:** Routes -> ReservationService (orchestrator) -> individual services -> models/DB. The `InventoryService` is an abstract base class; currently wired to `MockInventoryService` with hardcoded donation data.
+---
+
+## Architecture Diagram
+
+> How a request flows from the frontend through the backend. Every arrow is a function call or query — follow them top-to-bottom to trace any feature.
+
+```mermaid
+graph TB
+    subgraph Client
+        FE["React Frontend"]
+    end
+
+    subgraph "Flask Application (app.py)"
+        CORS["CORS Middleware"]
+
+        subgraph "Route Blueprints (REST API)"
+            DR["/api/v1/donations"]
+            HR["/api/v1/holds"]
+            HIR["/api/v1/history"]
+            UR["/api/v1/users"]
+            HEALTH["/api/v1/health"]
+        end
+
+        subgraph "Service Layer"
+            RS["ReservationService"]
+            HS["HoldService"]
+            HIS["HistoryService"]
+            US["UserService"]
+            IS{{"InventoryService"}}
+            MIS["MockInventoryService"]
+        end
+
+        subgraph "Data Layer (SQLAlchemy)"
+            UM["User Model"]
+            HM["Hold Model 
+            + HoldStatus Enum"]
+            PHM["PickupHistory Model"]
+            DB[("SQLite / MySQL")]
+        end
+    end
+
+    FE -- "HTTP JSON" --> CORS
+    CORS --> DR & HR & HIR & UR & HEALTH
+
+    DR -- "get_available_donations()
+    get_all_donations()" --> RS
+    HR -- "request_hold()
+    cancel_hold()
+    confirm_pickup()" --> RS
+    HR -- "get_active_holds_for_user()
+    get_all_holds_for_user()" --> HS
+    HIR --> HIS
+    UR --> US
+
+    RS -- "delegates" --> HS
+    RS -- "delegates" --> HIS
+    RS -- "queries donations" --> IS
+    IS -. "implements" .-> MIS
+
+    HS --> HM
+    HIS --> PHM
+    US --> UM
+
+    UM & HM & PHM --> DB
+
+    style RS fill:#4a90d9,color:#fff
+    style IS fill:#f5a623,color:#fff
+    style MIS fill:#f5a623,color:#fff
+    style DB fill:#7b8a8b,color:#fff
+    style FE fill:#61dafb,color:#000
+```
+
+### Request Flow Summary
+
+```mermaid
+sequenceDiagram
+    participant FE as Frontend
+    participant R as Route Blueprint
+    participant RS as ReservationService
+    participant IS as InventoryService
+    participant HS as HoldService
+    participant HIS as HistoryService
+    participant DB as Database
+
+    Note over FE,DB: Reserve a Donation
+    FE->>R: POST /api/v1/holds {userId, donationId}
+    R->>RS: request_hold(userId, donationId)
+    RS->>IS: get_donation_by_id(donationId)
+    IS-->>RS: donation dict
+    RS->>HS: create_hold(userId, donationId)
+    HS->>DB: Check existing active holds
+    HS->>DB: INSERT new Hold (status=active, expires=+2hrs)
+    HS-->>RS: Hold object
+    RS-->>R: {success, hold, donation}
+    R-->>FE: 201 JSON
+
+    Note over FE,DB: Confirm Pickup
+    FE->>R: POST /api/v1/holds/:id/pickup
+    R->>RS: confirm_pickup(holdId)
+    RS->>HS: complete_hold(holdId)
+    HS->>DB: UPDATE status → completed
+    RS->>IS: get_donation_by_id(donationId)
+    RS->>HIS: record_pickup(userId, donationId, ...)
+    HIS->>DB: INSERT PickupHistory
+    RS-->>R: {success, record}
+    R-->>FE: 200 JSON
+```
+
+### Data Model (ER Diagram)
+
+```mermaid
+erDiagram
+    USER {
+        int id PK
+        string email UK
+        string name
+        datetime created_at
+    }
+
+    HOLD {
+        int id PK
+        int user_id FK
+        string donation_id
+        HoldStatus status
+        datetime created_at
+        datetime expires_at
+    }
+
+    PICKUP_HISTORY {
+        int id PK
+        int user_id FK
+        string donation_id
+        string donation_description
+        string donor_contact
+        string pickup_location
+        datetime completed_at
+    }
+
+    USER ||--o{ HOLD : "places"
+    USER ||--o{ PICKUP_HISTORY : "completes"
+```
+
+### Key Design Decisions
+
+| Decision | Rationale |
+|---|---|
+| **ReservationService as orchestrator** | Single coordination point for hold + inventory + history. Routes stay thin. |
+| **InventoryService as abstract base class** | Dependency inversion — swap `MockInventoryService` for real API without touching any other code. |
+| **Lazy hold expiration** (`is_active` property) | Simpler than cron jobs. Expired holds are marked on read, keeping the system stateless between requests. |
+| **HoldStatus enum** | Type-safe status transitions enforced at the DB column level. |
+| **Separate HistoryService** | Pickup records are immutable audit logs, decoupled from the mutable Hold lifecycle. |
+
+---
 
 ## Running Tests
 
@@ -78,7 +234,7 @@ Error responses follow the shape: `{ "error": "<message>" }`
 
 ### Health
 
-#### `GET /api/health`
+#### `GET /api/v1/health`
 
 Server health check. No auth required.
 
