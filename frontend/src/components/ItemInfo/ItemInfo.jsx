@@ -9,34 +9,88 @@
  * - ItemInfo.Quantity
  */
 
+import styled from 'styled-components';
+
+const StyledItemInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex: 1 1 auto;
+  gap: var(--item-info-gap);
+`;
+
+const StyledItemInfoImageWrapper = styled.div`
+  width: var(--item-info-image-size);
+  height: var(--item-info-image-size);
+  flex: 0 0 auto;
+  border-radius: var(--item-info-image-radius);
+  overflow: hidden;
+  background-color: var(--bg-color-secondary);
+`;
+
+const StyledItemInfoImage = styled.img`
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+`;
+
+const StyledItemInfoContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: var(--item-info-content-gap);
+`;
+
+const StyledItemInfoTitle = styled.div`
+  font-weight: 600;
+  color: var(--fg-color-primary);
+  overflow: hidden;
+  white-space: nowrap;
+`;
+
+const StyledItemInfoDescription = styled.div`
+  color: var(--fg-color-secondary);
+  font-size: 0.85em;
+  font-weight: 400;
+  letter-spacing: 0.05px;
+`;
+
+const StyledItemInfoQuantity = styled.div`
+  color: var(--fg-color-tertiary);
+  font-size: 0.8em;
+  font-weight: 500;
+`;
+
 function ItemInfo({ children }) {
-  return <div className="itemInfo">{children}</div>;
+  return <StyledItemInfoWrapper>{children}</StyledItemInfoWrapper>;
 }
 
 function Image({ src, alt }) {
   return (
-    <div className="itemInfo__imageWrapper">
-      <img className="itemInfo__image" src={src} alt={alt} />
-    </div>
+    <StyledItemInfoImageWrapper>
+      <StyledItemInfoImage src={src} alt={alt} />
+    </StyledItemInfoImageWrapper>
   );
 }
 
 function Content({ children }) {
-  return <div className="itemInfo__content">{children}</div>;
+  return <StyledItemInfoContent>{children}</StyledItemInfoContent>;
 }
 
 function Title({ children }) {
   const titleAttr = typeof children === 'string' ? children : undefined;
   return (
-    <div className="itemInfo__title" title={titleAttr}>
+    <StyledItemInfoTitle title={titleAttr}>
       {children}
-    </div>
+    </StyledItemInfoTitle>
   );
 }
 
 function Description({ children, maxLength = 50 }) {
   if (typeof children !== 'string') {
-    return <div className="itemInfo__description">{children}</div>;
+    return <StyledItemInfoDescription>{children}</StyledItemInfoDescription>;
   }
 
   const safeMaxLength = Number.isFinite(maxLength) && maxLength >= 0 ? maxLength : 50;
@@ -45,11 +99,11 @@ function Description({ children, maxLength = 50 }) {
     ? `${children.slice(0, safeMaxLength).trimEnd()}...`
     : children;
 
-  return <div className="itemInfo__description">{displayText}</div>;
+  return <StyledItemInfoDescription>{displayText}</StyledItemInfoDescription>;
 }
 
 function Quantity({ value }) {
-  return <div className="itemInfo__quantity">{`Qty. ${value}`}</div>;
+  return <StyledItemInfoQuantity>{`Qty. ${value}`}</StyledItemInfoQuantity>;
 }
 
 ItemInfo.Image = Image;
