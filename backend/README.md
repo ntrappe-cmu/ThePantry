@@ -89,7 +89,8 @@ graph TB
 
         subgraph "Data Layer (SQLAlchemy)"
             UM["User Model"]
-            HM["Hold Model\n+ HoldStatus Enum"]
+            HM["Hold Model 
+            + HoldStatus Enum"]
             PHM["PickupHistory Model"]
             DB[("SQLite / MySQL")]
         end
@@ -98,9 +99,13 @@ graph TB
     FE -- "HTTP JSON" --> CORS
     CORS --> DR & HR & HIR & UR & HEALTH
 
-    DR -- "get_available_donations()\nget_all_donations()" --> RS
-    HR -- "request_hold()\ncancel_hold()\nconfirm_pickup()" --> RS
-    HR -- "get_active_holds_for_user()\nget_all_holds_for_user()" --> HS
+    DR -- "get_available_donations()
+    get_all_donations()" --> RS
+    HR -- "request_hold()
+    cancel_hold()
+    confirm_pickup()" --> RS
+    HR -- "get_active_holds_for_user()
+    get_all_holds_for_user()" --> HS
     HIR --> HIS
     UR --> US
 
