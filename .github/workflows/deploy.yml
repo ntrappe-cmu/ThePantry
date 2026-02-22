@@ -1,11 +1,11 @@
-name: Deploy Backend to VM
-
+name: Deploy to VM
 on:
   push:
     branches: [main]
     paths:
       - 'backend/**'
-  workflow_dispatch:  # allows manual trigger
+      - 'frontend/**'
+  workflow_dispatch:
 
 jobs:
   test:
@@ -34,7 +34,14 @@ jobs:
           script: |
             cd /opt/thepantry
             git pull origin main
+
+            # Backend
             cd backend
             source venv/bin/activate
             pip install -r requirements.txt
             sudo systemctl restart thepantry-backend
+
+            # Frontend
+            cd ../frontend
+            npm install
+            npm run build
