@@ -4,46 +4,79 @@ body {
 }
 
 #root {
+  position: relative;
   height: 100%;
   background-color: var(--bg-color-primary);
   color: var(--fg-color-primary);
   max-width: 400px;
   margin: auto;
   height: 100vh;
+  /* reserve space for the absolutely positioned nav bar
+     so in-flow children start below it */
+  padding-top: var(--nav-bar-height);
 }
 
 .scrollable-container {
-  /* Set a fixed height to contain content and enable internal scrolling */
-  height: 100vh;
+  /* Remaining screen height after nav bar, with internal scrolling */
+  height: calc(100vh - var(--nav-bar-height));
   overflow-y: auto; /* Show scrollbar only when needed */
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 h3 {
-  font-size: 1.2em;
-  font-weight: 400;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 1.1em;
+  font-weight: 600;
+  letter-spacing: .15px;
 }
 
 button {
   background: none;
   border: none;
   cursor: pointer;
+  font-size: 0.7em;
+}
+
+input {
+  font-family: 'SF Pro Display';
+  font-size: 0.8em;
+  font-weight: 400;
+  letter-spacing: .05px;
 }
 
 :root {
   --menu-bar-height: 2.5rem;
+  --menu-bar-gap: 5px;
   --menu-bar-width: 90%;
   --menu-bar-edges: 30px;
   --menu-item-spacing: 25px;
   --menu-icon-size: 32px;
   --menu-bar-padding: 10px 35px;
   --menu-icon-text-gap: -3px;
+
   --card-border-radius: 10px;
   --card-button-padding: 15px;
   --card-button-width: 100%;
   --card-width: 100%;
   --card-gap: 10px;
   --card-details-padding: 10px;
+
+  --nav-bar-height: 2.4rem;
+  --nav-bar-width: 100%;
+  --nav-bar-padding: 10px;
+  
+  --login-modal-width: 80%;
+  --login-input-edges: 8px;
+  --login-input-padding: 12px;
+  --login-text-input-gap: 25px;
+  --login-button-input-gap: 50px;
+  --login-button-padding: 8px 10px;
+  --login-button-edges: 8px;
+  --login-button-width: 60%;
 }
 
 @media only screen and (min-width: 768px) {

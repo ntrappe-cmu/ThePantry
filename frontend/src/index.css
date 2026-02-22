@@ -30,6 +30,13 @@ svg {
   fill: #313131;
 }
 
+/* Input default styling */
+input { 
+  outline: none;
+  background: none;
+  border: none;
+}
+
 /* Root CSS Custom Properties (design tokens) */
 :root {
   /* Typography */
@@ -69,6 +76,11 @@ svg {
   --gradient-progress: linear-gradient(90deg, #5BC56B 0%, #7EEB4C 100%);
   --progress-bar-height: 15px;
   --progress-bar-radius: 15px;
+  
+  /* Button Colors */
+  --btn-color-primary: rgb(0, 145, 255);
+  --btn-color-success: rgb(0, 255, 123);
+  --btn-color-disabled: rgba(69, 69, 69, 0.5);
 }
 
 /* Global element resets */
