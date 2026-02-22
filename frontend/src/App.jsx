@@ -16,6 +16,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import MenuBar from './components/MenuBar/menu-bar';
+import NavBar from './components/NavBar/nav-bar';
 import { EVENTS } from './constants/events.js';
 
 
@@ -44,6 +45,7 @@ function App() {
 
   return (
     <>
+      <NavBar />
       <div className='scrollable-container'>
         {/* Cards go here */}
       </div>
