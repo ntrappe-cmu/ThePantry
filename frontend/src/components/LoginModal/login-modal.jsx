@@ -12,7 +12,6 @@
  * - isLocked: boolean - disables inputs when locked
  */
 
-import React from 'react';
 import styled from 'styled-components';
 
 const StyledLoginModalWrapper = styled.form`
@@ -21,6 +20,13 @@ const StyledLoginModalWrapper = styled.form`
   width: 100%;
   align-items: center;
   justify-content: center;
+
+  h4 {
+    margin-top: 1.5rem;
+    font-size: 0.7em;
+    font-weight: 400;
+    color: var(--fg-color-alert);
+  }
 `;
 
 const StyledButton = styled.button`
@@ -47,6 +53,7 @@ const StyledCredentialsWrapper = styled.span`
   margin-bottom: var(--login-button-input-gap);
   width: 100%;
   border: 1px solid var(--border-color-primary);
+  ${(p) => p.showError && `border-color: var(--fg-color-alert);`}
   border-radius: var(--login-input-edges);
   background: none;
   transition: border-color 0.3s ease;
@@ -80,12 +87,12 @@ const StyledCredentialsWrapper = styled.span`
   }
 `;
 
-function LoginModal({ formData, onInputChange, onSubmit, isLoading, isLocked }) {
+function LoginModal({ formData, onInputChange, onSubmit, isLoading, isLocked, showError }) {
   return (
     <StyledLoginModalWrapper onSubmit={onSubmit}>
       <h3>Sign in to The Pantry</h3>
 
-      <StyledCredentialsWrapper >
+      <StyledCredentialsWrapper showError={showError}>
         {/* Email Input -- ex 'test@example.com' */}
         <input
           type="email"
@@ -111,6 +118,7 @@ function LoginModal({ formData, onInputChange, onSubmit, isLoading, isLocked }) 
       <StyledButton type="submit" disabled={isLocked || isLoading}>
         {isLoading ? 'Loading...' : 'Sign In'}
       </StyledButton>
+      {isLocked && <h4>Out of login attempts</h4>}
     </StyledLoginModalWrapper>
       
   );

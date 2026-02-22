@@ -58,6 +58,7 @@ export const logoutUser = async () => {
     // TODO: Replace with actual backend call
     // return fetch('/api/auth/logout', { method: 'POST' })
     //   .then(res => res.json());
+    console.log("omg logout");
 
     return { success: true };
   } catch (error) {

@@ -13,7 +13,6 @@
  * @param {string} activeView - The currently active view to highlight the corresponding menu button
  */
 
-import React from 'react';
 import styled from 'styled-components';
 import { VIEWS } from '../../constants/views.js';
 import { capitalize } from '../../utils/string.js';

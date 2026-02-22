@@ -25,6 +25,7 @@ function LoginView({ onLogin }) {
   const [attempts, setAttempts] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const MAX_ATTEMPTS = 3;
 
@@ -92,6 +93,10 @@ function LoginView({ onLogin }) {
         const newAttempts = attempts + 1;
         setAttempts(newAttempts);
 
+        // Flash error border for a short duration
+        setShowError(true);
+        setTimeout(() => setShowError(false), 1000);
+
         // Lock out if too many attempts
         if (newAttempts >= MAX_ATTEMPTS) {
           setIsLocked(true);
@@ -117,6 +122,7 @@ function LoginView({ onLogin }) {
         onSubmit={handleSubmit}
         isLoading={loading}
         isLocked={isLocked}
+        showError={showError}
       />
     </StyledLoginBackground>
   );

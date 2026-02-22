@@ -11,12 +11,15 @@ body {
   max-width: 400px;
   margin: auto;
   height: 100vh;
+  /* reserve space for the absolutely positioned nav bar
+     so in-flow children start below it */
+  padding-top: var(--nav-bar-height);
 }
 
 .scrollable-container {
   /* Remaining screen height after nav bar, with internal scrolling */
   height: calc(100vh - var(--nav-bar-height));
-  margin-top: var(--nav-bar-height);
+  /* content is already offset by #root padding-top */
   overflow-y: auto; /* Show scrollbar only when needed */
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
