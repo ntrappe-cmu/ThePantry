@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/NavBar/nav-bar.jsx</title>
+    <title>JSDoc: Source: utils/validators.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/NavBar/nav-bar.jsx</h1>
+    <h1 class="page-title">Source: utils/validators.js</h1>
 
     
 
@@ -27,55 +27,70 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * NavBar Component
+ * Validation utility functions
  * 
- * A navigation bar that displays just the site name currently
- * 
- * @component NavBar
+ * Centralized input validation logic for forms across the application.
+ * Provides reusable validators for email, password, and other common fields.
  */
-
-import styled from 'styled-components';
 
 /**
- * Styled wrapper for the menu bar container
- * Uses backdrop blur effect and semi-transparent background for a glassmorphism effect
+ * Validates email format using regex
+ * 
+ * @param {string} email - The email address to validate
+ * @returns {boolean} True if email format is valid, false otherwise
  */
-const StyledNavBarWrapper = styled.span`
-  display: flex;
-  width: var(--nav-bar-width);
-  height: var(--nav-bar-height);
-  background-color: var(--bg-color-primary);
-  border-bottom: 1px solid var(--border-color-primary);
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: var(--nav-bar-padding);
-  justify-content: center;
-  z-index: 98;
+export const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
 
-  h4 {
-    font-size: 0.75rem;
-    font-weight: 500;
-    align-self: center;
+/**
+ * Validates password strength
+ * 
+ * @param {string} password - The password to validate
+ * @returns {object} { isValid: boolean, errors: string[] }
+ */
+export const validatePassword = (password) => {
+  const errors = [];
+
+  if (!password) {
+    errors.push('Password is required');
+  } else {
+    if (password.length &lt; 6) {
+      errors.push('Password must be at least 6 characters');
+    }
   }
-`;
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
+};
 
 /**
- * NavBar Component
+ * Validates login credentials
  * 
- * Currently just the title of the site. Will later include navigation elements
- * 
- * @returns {React.ReactElement} The nav bar navigation element
+ * @param {string} email - The email to validate
+ * @param {string} password - The password to validate
+ * @returns {object} { isValid: boolean, errors: { email: string, password: string } }
  */
-function NavBar() {
-  return (
-    &lt;StyledNavBarWrapper className={'nav-bar'}>
-      &lt;h4>The Pantry&lt;/h4>
-    &lt;/StyledNavBarWrapper>
-  );
-}
+export const validateLoginForm = (email, password) => {
+  const errors = { email: '', password: '' };
 
-export default NavBar;
+  if (!validateEmail(email)) {
+    errors.email = 'Please enter a valid email address';
+  }
+
+  const passwordValidation = validatePassword(password);
+  if (!passwordValidation.isValid) {
+    errors.password = passwordValidation.errors[0];
+  }
+
+  return {
+    isValid: !errors.email &amp;&amp; !errors.password,
+    errors,
+  };
+};
 </code></pre>
         </article>
     </section>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: constants/views.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,69 +17,31 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: constants/views.js</h1>
 
     
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>The Pantry</h1>
-<p>Description TBD</p>
-<blockquote>
-<p>[!NOTE]
-<strong>Questions?</strong> Check the <a href="https://github.com/ntrappe-cmu/ThePantry/wiki">Wiki</a>.</p>
-</blockquote>
-<h2>Quick Start</h2>
-<h3>Frontend</h3>
-<p>To run the frontend code locally:</p>
-<ol>
-<li><strong>Navigate to the directory:</strong></li>
-</ol>
-<pre class="prettyprint source lang-bash"><code>cd frontend
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * View Constants
+ * 
+ * Centralized definitions for all view/page names in the application.
+ * Using constants prevents typos and makes refactoring easier.
+ */
+
+export const VIEWS = {
+  HOME: 'home',
+  ORDERS: 'orders',
+  HISTORY: 'history',
+  ACCOUNT: 'account',
+};
 </code></pre>
-<ol start="2">
-<li><strong>Install dependencies &amp; bundle:</strong></li>
-</ol>
-<pre class="prettyprint source lang-bash"><code>npm install
-npm run build
-</code></pre>
-<blockquote>
-<p>[!NOTE]
-Uses cypress <code>^15.10.0</code>, jest <code>^30.2.0</code>, react <code>^19.2.0</code>, and Vite.</p>
-</blockquote>
-<ol start="3">
-<li><strong>Run development server:</strong></li>
-</ol>
-<pre class="prettyprint source lang-bash"><code>npm run dev
-</code></pre>
-<ol start="4">
-<li><strong>Open in browser:</strong> Navigate to the localhost link provided by Vite.</li>
-</ol>
-<h3>Backend</h3>
-<h3>Testing</h3></article>
+        </article>
     </section>
-
-
 
 
 

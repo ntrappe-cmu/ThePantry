@@ -98,81 +98,6 @@
 
         
             
-<h4 class="name" id="EVENTS"><span class="type-signature">(constant) </span>EVENTS<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    constants/events.js
-
-Centralized event name registry for custom DOM events dispatched throughout the application.
-This file serves as the single source of truth for event names, preventing typos and making
-events discoverable across the codebase.
-
-Naming Convention: FEATURE_ACTION
-- FEATURE: The domain/component triggering the event (e.g., USER, NAVIGATION, HOLD)
-- ACTION: The past-tense action that occurred (e.g., LOGIN_ATTEMPT, CHANGED, STATUS_CHANGED)
-- Format: UPPER_SNAKE_CASE
-
-Usage:
-  import { EVENTS } from './constants/events';
-  document.dispatchEvent(new CustomEvent(EVENTS.USER_LOGIN_ATTEMPT, { detail: {...} }));
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants_events.js.html">constants/events.js</a>, <a href="constants_events.js.html#line18">line 18</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
 <h4 class="name" id="MenuBarOption"><span class="type-signature">(constant) </span>MenuBarOption<span class="type-signature"></span></h4>
 
 
@@ -222,7 +147,7 @@ Includes:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line49">line 49</a>
+        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -285,7 +210,7 @@ Uses backdrop blur effect and semi-transparent background for a glassmorphism ef
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line22">line 22</a>
+        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line24">line 24</a>
     </li></ul></dd>
     
 
@@ -348,7 +273,7 @@ Uses backdrop blur effect and semi-transparent background for a glassmorphism ef
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_NavBar_nav-bar.jsx.html">components/NavBar/nav-bar.jsx</a>, <a href="components_NavBar_nav-bar.jsx.html#line16">line 16</a>
+        <a href="components_NavBar_nav-bar.jsx.html">components/NavBar/nav-bar.jsx</a>, <a href="components_NavBar_nav-bar.jsx.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -365,37 +290,18 @@ Uses backdrop blur effect and semi-transparent background for a glassmorphism ef
 
 
         
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
             
+<h4 class="name" id="VIEWS"><span class="type-signature">(constant) </span>VIEWS<span class="type-signature"></span></h4>
 
-    
-
-    
-    <h4 class="name" id="MenuBar"><span class="type-signature"></span>MenuBar<span class="signature">()</span><span class="type-signature"> &rarr; {React.ReactElement}</span></h4>
-    
-
-    
 
 
 
 <div class="description">
-    MenuBar Component
+    View Constants
 
-Manages navigation state and dispatches custom events to notify other components
-of view changes. Each menu option updates the internal state and emits a 'menuBarSwitch'
-event with the selected view.
+Centralized definitions for all view/page names in the application.
+Using constants prevents typos and makes refactoring easier.
 </div>
-
-
-
-
-
-
 
 
 
@@ -432,7 +338,535 @@ event with the selected view.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line90">line 90</a>
+        <a href="constants_views.js.html">constants/views.js</a>, <a href="constants_views.js.html#line8">line 8</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="loginUser"><span class="type-signature">(constant) </span>loginUser<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Authenticate user with email and password
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="services_authService.js.html">services/authService.js</a>, <a href="services_authService.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="logoutUser"><span class="type-signature">(constant) </span>logoutUser<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Logout user
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="services_authService.js.html">services/authService.js</a>, <a href="services_authService.js.html#line56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="validateEmail"><span class="type-signature">(constant) </span>validateEmail<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Validates email format using regex
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils_validators.js.html">utils/validators.js</a>, <a href="utils_validators.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="validateLoginForm"><span class="type-signature">(constant) </span>validateLoginForm<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Validates login credentials
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils_validators.js.html">utils/validators.js</a>, <a href="utils_validators.js.html#line49">line 49</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="validatePassword"><span class="type-signature">(constant) </span>validatePassword<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Validates password strength
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils_validators.js.html">utils/validators.js</a>, <a href="utils_validators.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="verifyToken"><span class="type-signature">(constant) </span>verifyToken<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Verify if a token is still valid
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="services_authService.js.html">services/authService.js</a>, <a href="services_authService.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="MenuBar"><span class="type-signature"></span>MenuBar<span class="signature">(activeView, onNavigate)</span><span class="type-signature"> &rarr; {React.ReactElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    MenuBar Component (Props-Based)
+
+Displays navigation options and calls the onNavigate callback when a menu option is clicked.
+The parent component (App.jsx) manages the active view state and passes it down via the activeView prop.
+This makes data flow explicit: Menu clicks → onNavigate callback → parent state update
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>activeView</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The currently active view name (determines which button is highlighted)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onNavigate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Callback function called with the view name when a menu option is clicked</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_MenuBar_menu-bar.jsx.html">components/MenuBar/menu-bar.jsx</a>, <a href="components_MenuBar_menu-bar.jsx.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -544,7 +978,7 @@ Currently just the title of the site. Will later include navigation elements
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_NavBar_nav-bar.jsx.html">components/NavBar/nav-bar.jsx</a>, <a href="components_NavBar_nav-bar.jsx.html#line44">line 44</a>
+        <a href="components_NavBar_nav-bar.jsx.html">components/NavBar/nav-bar.jsx</a>, <a href="components_NavBar_nav-bar.jsx.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -612,13 +1046,13 @@ Currently just the title of the site. Will later include navigation elements
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EVENTS">EVENTS</a></li><li><a href="global.html#MenuBar">MenuBar</a></li><li><a href="global.html#MenuBarOption">MenuBarOption</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#StyledMenuBarWrapper">StyledMenuBarWrapper</a></li><li><a href="global.html#StyledNavBarWrapper">StyledNavBarWrapper</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#MenuBar">MenuBar</a></li><li><a href="global.html#MenuBarOption">MenuBarOption</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#StyledMenuBarWrapper">StyledMenuBarWrapper</a></li><li><a href="global.html#StyledNavBarWrapper">StyledNavBarWrapper</a></li><li><a href="global.html#VIEWS">VIEWS</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#logoutUser">logoutUser</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateLoginForm">validateLoginForm</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Feb 22 2026 00:15:05 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Feb 22 2026 01:26:14 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
