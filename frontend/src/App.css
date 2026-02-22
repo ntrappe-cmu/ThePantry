@@ -70,6 +70,64 @@ input {
   --login-button-padding: 8px 10px;
   --login-button-edges: 8px;
   --login-button-width: 60%;
+
+  --item-info-gap: 12px;
+  --item-info-image-size: 64px;
+  --item-info-image-radius: 12px;
+  --item-info-content-gap: 4px;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex: 1 1 auto;
+  gap: var(--item-info-gap);
+}
+
+.itemInfo__imageWrapper {
+  width: var(--item-info-image-size);
+  height: var(--item-info-image-size);
+  flex: 0 0 auto;
+  border-radius: var(--item-info-image-radius);
+  overflow: hidden;
+  background-color: var(--bg-color-secondary);
+}
+
+.itemInfo__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.itemInfo__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: var(--item-info-content-gap);
+}
+
+.itemInfo__title {
+  font-weight: 600;
+  color: var(--fg-color-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemInfo__description {
+  color: var(--fg-color-secondary);
+  font-size: 0.85em;
+  font-weight: 400;
+  letter-spacing: 0.05px;
+}
+
+.itemInfo__quantity {
+  color: var(--fg-color-tertiary);
+  font-size: 0.8em;
+  font-weight: 500;
 }
 
 @media only screen and (min-width: 768px) {
