@@ -6,7 +6,6 @@
  * @component NavBar
  */
 
-import React from 'react';
 import styled from 'styled-components';
 
 /**
@@ -14,7 +13,6 @@ import styled from 'styled-components';
  * Uses backdrop blur effect and semi-transparent background for a glassmorphism effect
  */
 const StyledNavBarWrapper = styled.span`
-border: 1px solid cyan;
   display: flex;
   width: var(--nav-bar-width);
   height: var(--nav-bar-height);

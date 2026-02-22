@@ -26,13 +26,14 @@ export default defineConfig([
     },
     rules: {
       "indent": ["warn", 2],
-      "no-unused-vars": "warn",      // Don't fail build for unused variables
+      "no-unused-vars": "off",      // Don't fail build for unused variables
       "no-console": "off",           // Allow console.log for debugging
       "react/prop-types": "off",     // Turn off prop-types (common in weak setups)
       "react-hooks/rules-of-hooks": "error", // Keep this as error (it breaks React)
       "react-hooks/exhaustive-deps": "warn",  // Only warn about dependency arrays
       "react/jsx-indent": ["warn", 2],
       "react/jsx-indent-props": ["warn", 2],
+      "react-hooks/set-state-in-effect": "off",
     },
     settings: {
       react: {

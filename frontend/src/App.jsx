@@ -13,43 +13,71 @@
  * - Manage loading/error states for API calls
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import MenuBar from './components/MenuBar/menu-bar';
+import { VIEWS } from './constants/views.js';
+import LoginView from './views/LoginView';
+import HomeView from './views/HomeView';
+import OrdersView from './views/OrdersView';
 import NavBar from './components/NavBar/nav-bar';
-import { EVENTS } from './constants/events.js';
 
 
 function App() {
+  // Checks whether user is logged in
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   // Tracks which view/page should be displayed to the user
-  const [currentView, setCurrentView] = useState('home');
+  const [currentView, setCurrentView] = useState(VIEWS.HOME);
+  
 
+  // On mount (first thing), check if user is logged in (rn from localStor)
   useEffect(() => {
-    /**
-     * Listen for menuBarSwitch events from MenuBar component
-     * Updates the current view when a menu item is clicked
-     */
-    const handleMenuSwitch = (event) => {
-      const { view } = event.detail;
-      setCurrentView(view);
-      console.log(`Switched to view: ${view}`);
-    };
+    const savedAuth = localStorage.getItem('isAuthenticated');
+    if (savedAuth) {
+      setIsAuthenticated(true);
+    }
+  }, []); // Run once
 
-    document.addEventListener(EVENTS.NAVIGATION_CHANGED, handleMenuSwitch);
+  /**
+   * Handle user authentication (TODO add backend for auth)
+   */
+  const handleLogin = (credentials) => {
+    // Validate with backend ...
+    setIsAuthenticated(true);
+    localStorage.setItem('isAuthenticated', 'true');
+  }
 
-    // Cleanup: remove event listener on component unmount
-    return () => {
-      document.removeEventListener(EVENTS.NAVIGATION_CHANGED, handleMenuSwitch);
-    };
-  }, []);
+  /**
+   * Handle navigation view changes from MenuBar component
+   * Updates the current view state when user clicks a menu item
+   * 
+   * @param {string} view - The view name to switch to (from VIEWS constants)
+   */
+  const handleNavigate = (view) => {
+    setCurrentView(view);
+    console.log(`Switched to view: ${view}`);
+  };
+
+  // Show login if not authenticated
+  if (!isAuthenticated) {
+    return <LoginView onLogin={handleLogin} />;
+  }
+
+  // Map views to components (more modular)
+  const viewMap = {
+    [VIEWS.HOME]: <HomeView />,
+    [VIEWS.ORDERS]: <OrdersView />,
+    // [VIEWS.HISTORY]: <HistoryView />,
+    // [VIEWS.ACCOUNT]: <AccountView />,
+  };
 
   return (
     <>
       <NavBar />
       <div className='scrollable-container'>
-        {/* Cards go here */}
+        {viewMap[currentView]}
       </div>
-      <MenuBar />
+      <MenuBar activeView={currentView} onNavigate={handleNavigate} />
     </>
   );
 }
