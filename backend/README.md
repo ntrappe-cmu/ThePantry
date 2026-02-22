@@ -15,6 +15,7 @@ python src/app.py
 
 Production: `http://17423-team03.s3d.cmu.edu`
 Same endpoints as below — e.g. `http://17423-team03.s3d.cmu.edu/api/v1/donations`
+Frontend is served from the same origin, so use relative paths (e.g. `fetch("/api/v1/donations")`).
 
 Currently using SQLite in production. To switch to MySQL later:
 ```bash
