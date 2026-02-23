@@ -2,7 +2,8 @@
   "source": {
     "include": ["frontend/"],
     "includePattern": ".+\\.js(doc|x)?$",
-    "excludePattern": "(^|\\/|\\\\)_"
+    "exclude": ["frontend/node_modules"], 
+    "excludePattern": "(^|\\/|\\\\)node_modules"
   },
   "opts": {
     "destination": "./out",
