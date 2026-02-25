@@ -1,7 +1,7 @@
 """
 PickupHistory Model
 
-Permanent record of successfully completed food pickups.
+Permanent record of successfully completed donation pickups.
 """
 from datetime import datetime, timezone
 
@@ -9,7 +9,7 @@ from extensions import db
 
 class PickupHistory(db.Model):
     """
-    SQLAlchemy model representing a completed food pickup event.
+    SQLAlchemy model representing a completed donation pickup event.
 
     Created when a Hold transitions to ``"completed"`` status, capturing a
     permanent, immutable audit record of the transaction. Unlike a Hold, a
@@ -18,8 +18,8 @@ class PickupHistory(db.Model):
     Attributes:
         id (int): Primary key, auto-incremented.
         user_id (int): Foreign key referencing the User who completed the pickup.
-        food_id (str): Identifier of the food item that was picked up.
-        food_description (str, optional): Human-readable description of the food item.
+        donation_id (str): Identifier of the donation_id that was picked up.
+        donation_description (str, optional): Human-readable description of the donation item.
         donor_contact (str, optional): Contact information for the donor.
         pickup_location (str, optional): Address or description of the pickup location.
         completed_at (datetime): UTC timestamp of when the pickup was completed.
@@ -29,8 +29,8 @@ class PickupHistory(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    food_id = db.Column(db.String(100), nullable=False)
-    food_description = db.Column(db.String(500), nullable=True)
+    donation_id = db.Column(db.String(100), nullable=False)
+    donation_description = db.Column(db.String(500), nullable=True)
     donor_contact = db.Column(db.String(255), nullable=True)
     pickup_location = db.Column(db.String(500), nullable=True)
     completed_at = db.Column(
@@ -40,12 +40,19 @@ class PickupHistory(db.Model):
     # Relationships
     user = db.relationship("User", back_populates="pickups")
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
+        """
+        Serialize pickup history to a JSON-compatible dictionary.
+
+        Returns:
+            out: Dict with keys: id, userId, donationId, donationDescription,
+            donorContact, pickupLocation, completedAt.
+        """
         return {
             "id": self.id,
             "userId": self.user_id,
-            "foodId": self.food_id,
-            "foodDescription": self.food_description,
+            "donationId": self.donation_id,
+            "donationDescription": self.donation_description,
             "donorContact": self.donor_contact,
             "pickupLocation": self.pickup_location,
             "completedAt": self.completed_at.isoformat(),
