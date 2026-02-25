@@ -1,13 +1,13 @@
 """
-Inventory Adapter
+Inventory Service
 
-Wraps the external Food Inventory Service API and translates external
+Wraps the external Donation Inventory Service API and translates external
 data into our internal Donation format.
 """
 from abc import ABC, abstractmethod
 
 class InventoryService(ABC):
-    """Abstract interface for the Food Inventory Service."""
+    """Abstract interface for the Donation Inventory Service."""
     
     @abstractmethod
     def get_available_donations(self, lat: float, lng: float, radius: float) -> list[dict]:
@@ -20,7 +20,7 @@ class InventoryService(ABC):
             radius: Search radius in miles.
 
         Returns:
-            List of donation dicts with keys: id, description, foodType,
+            List of donation dicts with keys: id, description, donationType,
             quantity, donorName, donorContact, lat, lng, address, expiresAt.
         """
         pass
@@ -37,7 +37,7 @@ class InventoryService(ABC):
     
 class MockInventoryService(InventoryService):
     """
-    Hardcoded stub for the Food Inventory Service.
+    Hardcoded stub for the Donation Inventory Service.
 
     Returns sample donation data for development and testing.
     """
@@ -47,7 +47,7 @@ class MockInventoryService(InventoryService):
         {
             "id": "DON-001",
             "description": "Assorted fresh vegetables (carrots, broccoli, peppers)",
-            "foodType": "Produce",
+            "donationType": "Produce",
             "quantity": "~20 lbs",
             "donorName": "Pittsburgh Fresh Market",
             "donorContact": "412-555-0101",
@@ -59,7 +59,7 @@ class MockInventoryService(InventoryService):
         {
             "id": "DON-002",
             "description": "Leftover catered sandwiches and wraps",
-            "foodType": "Prepared Food",
+            "donationType": "Prepared Food",
             "quantity": "30 servings",
             "donorName": "CMU Cohon Center",
             "donorContact": "412-555-0202",
@@ -71,7 +71,7 @@ class MockInventoryService(InventoryService):
         {
             "id": "DON-003",
             "description": "Canned soups and pasta (assorted, near sell-by date)",
-            "foodType": "Canned Goods",
+            "donationType": "Canned Goods",
             "quantity": "2 cases",
             "donorName": "Giant Eagle - Squirrel Hill",
             "donorContact": "412-555-0303",
@@ -83,7 +83,7 @@ class MockInventoryService(InventoryService):
         {
             "id": "DON-004",
             "description": "Bakery items: bread loaves, rolls, and muffins",
-            "foodType": "Bakery",
+            "donationType": "Bakery",
             "quantity": "~15 items",
             "donorName": "Allegro Hearth Bakery",
             "donorContact": "412-555-0404",
@@ -95,7 +95,7 @@ class MockInventoryService(InventoryService):
         {
             "id": "DON-005",
             "description": "Dairy products: milk, yogurt, cheese (refrigerated)",
-            "foodType": "Dairy",
+            "donationType": "Dairy",
             "quantity": "~10 lbs",
             "donorName": "Trader Joe's - East Liberty",
             "donorContact": "412-555-0505",
