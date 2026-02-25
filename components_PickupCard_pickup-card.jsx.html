@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/PickupCard/pickup-card.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/PickupCard/pickup-card.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * PickupCard Component
+ * 
+ * A reusable card component for displaying donation and hold information. Features:
+ * - Completely modular construction
+ * - Can either use a "default" card construction or create own card using sub-components
+ * - Basic handling for incomplete values or missing functions
+ * - Callback returns pickedUpStatus, orderId, and donationId
+ * - Card relays whether button was clicked (pickedUp) and wait for confirmation from parent before removing button
+ * @component PickupCard
+ */
+
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import ItemInfo from '../ItemInfo/ItemInfo.jsx';
+import ProgressBar from '../ProgressBar/ProgressBar.jsx'
+
+/**
+ * Styled components for PickupCard
+ */
+
+const StyledStatusHeader = styled.div`
+  padding: var(--card-details-padding) 0px var(--card-details-padding) var(--card-details-padding);
+  display: flex;
+  flex-direction: column;
+
+  &amp; .small-status {
+  font-size: 0.8em;
+  margin-bottom: 5px;
+  }
+
+  &amp; .fg-color-success {
+  color: var(--fg-color-success);
+  }
+
+  &amp; .fg-color-secondary {
+  color: var(--fg-color-secondary);
+  }
+`;
+
+const StyledCardPadFix = styled.div`
+  padding: var(--card-gap);
+`;
+
+const StyledPickupCardWrapper = styled.div`
+  background: var(--bg-color-primary-glass);
+  backdrop-filter: var(--bg-blur-primary);
+  -webkit-backdrop-filter: var(--bg-blur-primary);
+  width: var(--card-width);
+  display: flex;
+  flex-direction: column;
+  color: var(--fg-color-primary);
+  border-radius: var(--card-border-radius);
+
+  &amp; .progress-bar-container {
+  width: calc(100% - 2*(var(--card-border-radius)));
+  margin-left: var(--card-border-radius);
+  }
+`;
+
+const StyledPCDetails = styled.div`
+  border-top: 1px solid var(--bg-color-tertiary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &amp; .label, .value {
+  font-size: 0.9em;
+  padding: var(--card-details-padding);
+  }
+
+  &amp; a {
+  color: var(--fg-color-highlight);
+  text-decoration: none;
+  }
+`;
+
+const StyledActionButton = styled.div`
+  width: var(--card-button-width);
+  padding: var(--card-button-padding);
+  transition: background 0.2s ease;
+  cursor: pointer;
+  background: var(--fg-color-highlight);
+  color: var(--fg-color-primary);
+  border-radius: 0 0 var(--card-border-radius) var(--card-border-radius);
+  font-size: 0.8em;
+  text-align: center;
+`;
+
+/**
+ * PickupCard Component
+ * 
+ * Displays donation and hold information with two states: pending pickup and completed pickup.
+ * 
+ * Built this so it can either take a custom structure (built with sub-components or other custom sub-elements) or default to the normal card structure
+ * Also built this to take in either an object (donationData), which is in a JSON format and will be updated to follow the naming conventions from the API from the DB
+ * But, can also take custom input for the sub-components, which are params orderId, donationId, address, contactInfo, progress, isDelayed, itemQuantity, itemImgSrc, itemTitle, itemDescription
+ * Either way, just remember you can essentially build the cards how you want, but you need either the donationData object or the custom string params
+ * Callback returns pickedUp, orderId, and donationId
+ * 
+ * @param {object} donationData - Object in JSON format, either is or mimicks info from DB API; not required if other elements specified below
+ * @param {boolean} pickedUp - Required, states whether the item has been picked up or not
+ * @param {string} orderId - Required, but can be either specified here or in donationData as orderId
+ * @param {string} donationId - Required, but can be either specified here or in donationData as donationId
+ * @param {string} address - Not technically required, but you'll get the default message if not specified. Address of pickup location
+ * @param {string} contactInfo - Not technically required, but you'll get the default message if not specified. Contact info of donator
+ * @param {number} itemQuantity - Not technically required, but you'll get default message if not specified. Quantity of item in number form
+ * @param {string} itemImgSrc - Not technically required. Image source for the item (url)
+ * @param {number} itemTitle - Not technically required, but you'll get default message if not specified. Title of the item
+ * @param {number} itemDescription - Not technically required, but you'll get default message if not specified. Description of item
+ * @param {Function} onStatusChange - Callback function, will pass pickedUp, orderId, and donationId back
+ * @returns {React.ReactElement} The pickupCard component in its entirety
+ */
+
+// Main wrapper component, donationData is whatever information in specific schema from DB, other params specified above
+function PickupCard({children, donationData, pickedUp, orderId, donationId, address, contactInfo, progress, isDelayed, itemQuantity, itemImgSrc, itemTitle, itemDescription, onStatusChange = () => {}}) {
+
+    // Toggle status when the action button is clicked
+    // Additionally, pass the payload back
+    const handlePickup = () => {
+        const pickedUpStatus = !pickedUp;
+        const passbackOrderId = orderId || donationData?.orderId;
+        const passbackDonationId = donationId || donationData?.number;
+
+        // I know this looks funny, but just for sake of consistency when passing stuff back
+        orderId = passbackOrderId;
+        donationId = passbackDonationId;
+        pickedUp = pickedUpStatus;
+
+        // Pass back payload
+        onStatusChange({pickedUp, orderId, donationId});
+    };
+
+  /*
+  * TLDR: We see if custom children exist and let whoever is using this assemble it in a custom manner.
+  * If the children don't really exist, we just take in the donationData and built it according to that input.
+  */
+  const content = children ? (
+
+    // Custom config using custom child elements
+    React.Children.map(children, (child) => {
+      if (!React.isValidElement(child)) return child;
+
+      // Check if the child a custom sub-component
+      // Many thanks to Gemini for the logic from 124-133
+      const isSubComponent = [
+        ActionButton, 
+        StatusHeader, 
+        ProgressBar
+      ].includes(child.type);
+
+      return isSubComponent 
+        ? React.cloneElement(child, { pickedUp, handlePickup })
+        : child; // If it's a &lt;div> or &lt;span>, return it without the extra props
+      })
+  ) : (
+    // Prebuilt using donationData schema
+    &lt;>
+      &lt;StatusHeader pickedUp={pickedUp}>
+        {donationData?.availability}
+      &lt;/StatusHeader>
+
+      &lt;ProgressBar progress={donationData?.progress || progress} isDelayed={donationData?.isDelayed || isDelayed || ""}/>
+
+      &lt;ItemInfo>
+        &lt;ItemInfo.Image src={itemImgSrc || null}/>
+        &lt;ItemInfo.Content>
+          &lt;ItemInfo.Title>
+            {itemTitle || donationData?.itemTitle || "Not provided"}
+          &lt;/ItemInfo.Title>
+          &lt;ItemInfo.Description>
+            {itemDescription || donationData?.itemDescription || "Not provided"}
+          &lt;/ItemInfo.Description>
+          &lt;ItemInfo.Quantity value={itemQuantity || donationData?.itemQuantity || "Not provided"} />
+        &lt;/ItemInfo.Content>
+      &lt;/ItemInfo>
+      
+      &lt;DonationNumber>
+        {donationId || donationData?.number || "Not provided"}
+      &lt;/DonationNumber>
+      
+      &lt;Location>
+        {donationData?.address || address || "Not provided"}
+      &lt;/Location>
+      
+      &lt;ContactInfo>
+        {donationData?.contact || contactInfo || "Not provided"}
+      &lt;/ContactInfo>
+
+      &lt;ActionButton pickedUp={pickedUp} handlePickup={handlePickup} />
+    &lt;/>
+  );
+
+  return (
+    // Pickup card padfix is really just another wrapper to cheat the edge padding; likely will be replace with whole app container gap later, if using flexbox
+    &lt;StyledCardPadFix>
+        &lt;StyledPickupCardWrapper>
+            {content}
+        &lt;/StyledPickupCardWrapper>
+    &lt;/StyledCardPadFix>
+  )
+}
+
+// Define sub-components
+function StatusHeader({children, pickedUp}) {
+  return (
+    &lt;StyledStatusHeader>
+        &lt;span className={`small-status ${pickedUp ? 'fg-color-success' : 'fg-color-primary'}`}>{pickedUp ? "✓ Complete" : "Pickup Status"}&lt;/span>
+        &lt;h3>{children}&lt;/h3>
+    &lt;/StyledStatusHeader>
+  );
+}
+
+function DonationNumber({children}) {
+  return (
+    &lt;StyledPCDetails>
+        &lt;span className="label">Donation Number&lt;/span>
+        &lt;span className="value">{children}&lt;/span>
+    &lt;/StyledPCDetails>
+  );
+}
+
+function Location({children}) {
+  return (
+    &lt;StyledPCDetails>
+        &lt;span className="label">Pickup At&lt;/span>
+        &lt;a className="value" href="#">{children}&lt;/a>
+    &lt;/StyledPCDetails>
+  );
+}
+
+function ContactInfo({children}) {
+  return (
+    &lt;StyledPCDetails>
+        &lt;span className="label">Contact Info&lt;/span>
+        &lt;span className="value">{children}&lt;/span>
+    &lt;/StyledPCDetails>
+  );
+}
+
+function ActionButton({handlePickup, pickedUp}) {
+    if (pickedUp) return null;
+
+    return &lt;StyledActionButton type="button" onClick={handlePickup}>Mark as Picked Up&lt;/StyledActionButton>;
+}
+
+// Attach sub-components to main component
+PickupCard.StatusHeader = StatusHeader;
+PickupCard.DonationNumber = DonationNumber;
+PickupCard.Location = Location; 
+PickupCard.ContactInfo = ContactInfo;
+PickupCard.ActionButton = ActionButton;
+PickupCard.ProgressBar = ProgressBar;
+PickupCard.ItemInfo = ItemInfo;
+
+export default PickupCard;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#MenuBar">MenuBar</a></li><li><a href="global.html#MenuBarOption">MenuBarOption</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#PickupCard">PickupCard</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="global.html#StyledMenuBarWrapper">StyledMenuBarWrapper</a></li><li><a href="global.html#StyledNavBarWrapper">StyledNavBarWrapper</a></li><li><a href="global.html#StyledProgressBarFilled">StyledProgressBarFilled</a></li><li><a href="global.html#StyledStatusHeader">StyledStatusHeader</a></li><li><a href="global.html#VIEWS">VIEWS</a></li><li><a href="global.html#canRequestMoreOrders">canRequestMoreOrders</a></li><li><a href="global.html#fetchDonationCountForRegion">fetchDonationCountForRegion</a></li><li><a href="global.html#fetchDonationsForRegion">fetchDonationsForRegion</a></li><li><a href="global.html#fetchOrderCountForUser">fetchOrderCountForUser</a></li><li><a href="global.html#fetchOrdersForUser">fetchOrdersForUser</a></li><li><a href="global.html#isDonationRequestDisabled">isDonationRequestDisabled</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#logoutUser">logoutUser</a></li><li><a href="global.html#removeOrderForUser">removeOrderForUser</a></li><li><a href="global.html#requestDonation">requestDonation</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateLoginForm">validateLoginForm</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Feb 25 2026 00:41:19 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
