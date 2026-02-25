@@ -62,3 +62,37 @@ export const removeOrderForUser = async (userId, orderId) => {
     };
   }
 };
+
+/**
+ * Fetch total order count for a specific user
+ *
+ * @param {number|string} userId - User ID
+ * @returns {Promise<object>} { success: boolean, count?: number, error?: string }
+ */
+export const fetchOrderCountForUser = async (userId) => {
+  try {
+    // TODO: Replace with actual backend call
+    // const response = await fetch(`/api/users/${userId}/orders/count`);
+    // const data = await response.json();
+    // return { success: true, count: data.count };
+
+    const result = await fetchOrdersForUser(userId);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error || 'Failed to fetch order count',
+      };
+    }
+
+    return {
+      success: true,
+      count: (result.orders || []).length,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || 'Failed to fetch order count',
+    };
+  }
+};
