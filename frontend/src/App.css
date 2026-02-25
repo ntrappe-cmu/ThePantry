@@ -58,6 +58,13 @@ input {
   --menu-bar-padding: 10px 35px;
   --menu-icon-text-gap: -3px;
 
+  --card-border-radius: 10px;
+  --card-button-padding: 15px;
+  --card-button-width: 100%;
+  --card-width: 100%;
+  --card-gap: 10px;
+  --card-details-padding: 10px;
+
   --nav-bar-height: 2.4rem;
   --nav-bar-width: 100%;
   --nav-bar-padding: 10px;
