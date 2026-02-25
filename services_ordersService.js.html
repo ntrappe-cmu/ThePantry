@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: services/authService.js</title>
+    <title>JSDoc: Source: services/ordersService.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: services/authService.js</h1>
+    <h1 class="page-title">Source: services/ordersService.js</h1>
 
     
 
@@ -27,90 +27,67 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Authentication Service
- * 
- * Handles all API calls related to user authentication.
+ * Orders Service
+ *
+ * Handles API calls related to pickup orders.
  * Currently stubbed—will connect to backend later.
- * 
- * TODO: Replace stub implementation with actual backend API calls
  */
 
 /**
- * Authenticate user with email and password
- * 
- * @param {string} email - User email address
- * @param {string} password - User password
- * @returns {Promise&lt;object>} { success: boolean, token?: string, error?: string }
+ * Fetch pickup orders for a specific user
+ *
+ * @param {number|string} userId - User ID
+ * @returns {Promise&lt;object>} { success: boolean, orders?: Array&lt;{orderId:number, donationId:number, title:string}>, error?: string }
  */
-export const loginUser = async (email, password) => {
+export const fetchOrdersForUser = async (userId) => {
   try {
     // TODO: Replace with actual backend call
-    // return fetch('/api/auth/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email, password })
-    // }).then(res => res.json());
+    // Currently stubbed as: 
+    //   const response = await fetch(`/api/users/${userId}/orders`);
+    //   const data = await response.json();
+    //   return { success: true, orders: data.orders };
 
-    // STUB: Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 400));
 
-    // STUB: Simulate some test credentials
-    if (email === 'test@example.com' &amp;&amp; password === '123456') {
-      return {
-        success: true,
-        token: 'fake-jwt-token-' + Date.now(),
-        user: { email, id: 1 },
-      };
-    }
-
-    // STUB: Simulate failed login
     return {
-      success: false,
-      error: 'Invalid email or password',
+      success: true,
+      orders: [
+        { title: 'Order #1', orderId: 12345, donationId: 101 },
+        { title: 'Order #2', orderId: 23456, donationId: 102 },
+        { title: 'Big Order #3', orderId: 34567, donationId: 103 },
+      ],
     };
   } catch (error) {
     return {
       success: false,
-      error: error.message || 'Login failed. Please try again.',
+      error: error.message || 'Failed to fetch orders',
     };
   }
 };
 
 /**
- * Logout user
- * 
- * @returns {Promise&lt;object>} { success: boolean }
+ * Remove an order for a specific user after pickup
+ *
+ * @param {number|string} userId - User ID
+ * @param {number|string} orderId - Order ID to remove
+ * @returns {Promise&lt;object>} { success: boolean, error?: string }
  */
-export const logoutUser = async () => {
+export const removeOrderForUser = async (userId, orderId) => {
   try {
     // TODO: Replace with actual backend call
-    // return fetch('/api/auth/logout', { method: 'POST' })
-    //   .then(res => res.json());
-    console.log("omg logout");
+    // const response = await fetch(`/api/users/${userId}/orders/${orderId}`, {
+    //   method: 'DELETE',
+    // });
+    // const data = await response.json();
+    // return { success: data.success };
 
+    await new Promise((resolve) => setTimeout(resolve, 200));
     return { success: true };
   } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
-
-/**
- * Verify if a token is still valid
- * 
- * @param {string} token - JWT token to verify
- * @returns {Promise&lt;object>} { isValid: boolean }
- */
-export const verifyToken = async (token) => {
-  try {
-    // TODO: Replace with actual backend call
-    // return fetch('/api/auth/verify', {
-    //   headers: { 'Authorization': `Bearer ${token}` }
-    // }).then(res => res.json());
-
-    // STUB: Check if token exists and is recent
-    return { isValid: !!token };
-  } catch (error) {
-    return { isValid: false };
+    return {
+      success: false,
+      error: error.message || 'Failed to remove order',
+    };
   }
 };
 </code></pre>
