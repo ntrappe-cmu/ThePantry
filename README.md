@@ -1,9 +1,9 @@
 # The Pantry
 
-Description TBD
-
-> [!NOTE]
-> **Questions?** Check the [Wiki](https://github.com/ntrappe-cmu/ThePantry/wiki).
+## Demo
+Login with:
+- **Email**: `you@example.com`
+- **Password**: `123456`
 
 ## Quick Start
 
