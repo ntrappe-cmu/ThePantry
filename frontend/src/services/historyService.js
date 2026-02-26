@@ -75,19 +75,19 @@ export const fetchHistoryForUser = async (userId) => {
     const records = (Array.isArray(holds) ? holds : [])
       .filter((hold) => hold.status === 'completed')
       .map((hold) => {
-      const donation = donationById.get(hold.donationId);
-      const pickupRecord = pickupByDonationId.get(hold.donationId);
+        const donation = donationById.get(hold.donationId);
+        const pickupRecord = pickupByDonationId.get(hold.donationId);
 
-      return {
-        id: hold.id,
-        donationName:
-          pickupRecord?.donationDescription ||
-          donation?.description ||
-          `Donation ${hold.donationId}`,
-        requestedAt: hold.createdAt || null,
-        pickedUpAt: pickupRecord?.completedAt || hold.completedAt || null,
-      };
-    });
+        return {
+          id: hold.id,
+          donationName:
+            pickupRecord?.donationDescription ||
+            donation?.description ||
+            `Donation ${hold.donationId}`,
+          requestedAt: hold.createdAt || null,
+          pickedUpAt: pickupRecord?.completedAt || hold.completedAt || null,
+        };
+      });
 
     records.sort((a, b) => {
       const aTime = new Date(a.requestedAt || 0).getTime();

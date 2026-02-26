@@ -155,22 +155,22 @@ function PickupCard({
   cancelDonation = () => {},
 }) {
 
-    // Toggle status when the action button is clicked
-    // Additionally, pass the payload back
-    const handlePickup = () => {
-        onStatusChange({
-          pickedUp: !pickedUp,
-          orderId: orderId || donationData?.orderId,
-          donationId: donationId || donationData?.number,
-        });
-    };
+  // Toggle status when the action button is clicked
+  // Additionally, pass the payload back
+  const handlePickup = () => {
+    onStatusChange({
+      pickedUp: !pickedUp,
+      orderId: orderId || donationData?.orderId,
+      donationId: donationId || donationData?.number,
+    });
+  };
 
-    const handleCancel = () => {
-      cancelDonation({
-        orderId: orderId || donationData?.orderId,
-        donationId: donationId || donationData?.number,
-      });
-    };
+  const handleCancel = () => {
+    cancelDonation({
+      orderId: orderId || donationData?.orderId,
+      donationId: donationId || donationData?.number,
+    });
+  };
 
   /*
   * TLDR: We see if custom children exist and let whoever is using this assemble it in a custom manner.
@@ -185,7 +185,7 @@ function PickupCard({
       // Check if the child a custom sub-component
       // Many thanks to Gemini for the logic from 124-133
       const isSubComponent = [
-        ActionButton, 
+        // ActionButton, 
         StatusHeader, 
         ProgressBar
       ].includes(child.type);
@@ -193,7 +193,7 @@ function PickupCard({
       return isSubComponent 
         ? React.cloneElement(child, { pickedUp, handlePickup })
         : child; // If it's a <div> or <span>, return it without the extra props
-      })
+    })
   ) : (
     // Prebuilt using donationData schema
     <>
@@ -250,8 +250,8 @@ function PickupCard({
 function StatusHeader({children, pickedUp}) {
   return (
     <StyledStatusHeader>
-        <span className={`${pickedUp ? 'fg-color-success' : 'fg-color-primary'}`}>{pickedUp ? "✓ Complete" : "Pickup Status"}</span>
-        <h3>{children}</h3>
+      <span className={`${pickedUp ? 'fg-color-success' : 'fg-color-primary'}`}>{pickedUp ? "✓ Complete" : "Pickup Status"}</span>
+      <h3>{children}</h3>
     </StyledStatusHeader>
   );
 }
@@ -259,8 +259,8 @@ function StatusHeader({children, pickedUp}) {
 function DonationNumber({children}) {
   return (
     <StyledPCDetails>
-        <span className="label">Donation Number</span>
-        <span className="value">{children}</span>
+      <span className="label">Donation Number</span>
+      <span className="value">{children}</span>
     </StyledPCDetails>
   );
 }
@@ -268,8 +268,8 @@ function DonationNumber({children}) {
 function Location({children}) {
   return (
     <StyledPCDetails>
-        <span className="label">Pickup At</span>
-        <a className="value" href="#">{children}</a>
+      <span className="label">Pickup At</span>
+      <a className="value" href="#">{children}</a>
     </StyledPCDetails>
   );
 }
@@ -277,8 +277,8 @@ function Location({children}) {
 function ContactInfo({children}) {
   return (
     <StyledPCDetails>
-        <span className="label">Contact Info</span>
-        <span className="value">{children}</span>
+      <span className="label">Contact Info</span>
+      <span className="value">{children}</span>
     </StyledPCDetails>
   );
 }
