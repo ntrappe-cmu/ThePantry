@@ -39,6 +39,8 @@ class Hold(db.Model):
         created_at (datetime): UTC timestamp of when the hold was created.
         expires_at (datetime): UTC timestamp of when the hold expires
             (``created_at`` + 2 hours by default).
+        completed_at (datetime | None): UTC timestamp of pickup confirmation.
+        cancelled_at (datetime | None): UTC timestamp of hold cancellation.
         user (User): Relationship back to the owning User.
     """
     __tablename__ = "holds"
@@ -49,6 +51,8 @@ class Hold(db.Model):
     status = db.Column(db.Enum(HoldStatus), nullable=False, default=HoldStatus.ACTIVE)
     created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     expires_at = db.Column(db.DateTime, nullable=False)
+    completed_at = db.Column(db.DateTime, nullable=True)
+    cancelled_at = db.Column(db.DateTime, nullable=True)
 
     # Relationships
     user = db.relationship("User", back_populates="holds")
@@ -83,7 +87,8 @@ class Hold(db.Model):
         Serialize hold to a JSON-compatible dictionary.
 
         Returns:
-            out: Dict with keys: id, userId, donationId, status, createdAt, expiresAt.
+            out: Dict with keys: id, userId, donationId, status, createdAt,
+            expiresAt, completedAt, cancelledAt.
         """
         return {
             "id": self.id,
@@ -92,4 +97,6 @@ class Hold(db.Model):
             "status": self.status.value,
             "createdAt": self.created_at.isoformat(),
             "expiresAt": self.expires_at.isoformat(),
+            "completedAt": self.completed_at.isoformat() if self.completed_at else None,
+            "cancelledAt": self.cancelled_at.isoformat() if self.cancelled_at else None,
         }

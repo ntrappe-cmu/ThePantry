@@ -79,8 +79,10 @@ input {
   
   /* Button Colors */
   --btn-color-primary: rgb(0, 145, 255);
+  --btn-color-secondary: rgb(69, 69, 69);
   --btn-color-success: rgb(0, 255, 123);
   --btn-color-disabled: rgba(69, 69, 69, 0.5);
+  --btn-color-warning: rgb(236, 73, 81);
 }
 
 /* Global element resets */
