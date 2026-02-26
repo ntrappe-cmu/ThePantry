@@ -2,10 +2,25 @@
  * Authentication Service
  * 
  * Handles all API calls related to user authentication.
- * Currently stubbed—will connect to backend later.
- * 
- * TODO: Replace stub implementation with actual backend API calls
+ * Password checking is currently frontend-only for MVP.
  */
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:5000';
+const USERS_LOOKUP_ENDPOINT = `${API_BASE_URL}/api/v1/users/lookup`;
+const DEMO_PASSWORD = '123456';
+
+const getErrorMessage = async (response, fallbackMessage) => {
+  try {
+    const payload = await response.json();
+    if (payload?.error) {
+      return payload.error;
+    }
+  } catch {
+    // ignore JSON parse errors and use fallback
+  }
+
+  return `${fallbackMessage} (${response.status})`;
+};
 
 /**
  * Authenticate user with email and password
@@ -16,29 +31,44 @@
  */
 export const loginUser = async (email, password) => {
   try {
-    // TODO: Replace with actual backend call
-    // return fetch('/api/auth/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email, password })
-    // }).then(res => res.json());
-
-    // STUB: Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // STUB: Simulate some test credentials
-    if (email === 'test@example.com' && password === '123456') {
+    if (!email || !password) {
       return {
-        success: true,
-        token: 'fake-jwt-token-' + Date.now(),
-        user: { email, id: 1 },
+        success: false,
+        error: 'Email and password are required',
       };
     }
 
-    // STUB: Simulate failed login
+    // MVP behavior: only check password in frontend, never send it to backend.
+    if (password !== DEMO_PASSWORD) {
+      return {
+        success: false,
+        error: 'Invalid email or password',
+      };
+    }
+
+    const query = new URLSearchParams({ email });
+    const response = await fetch(`${USERS_LOOKUP_ENDPOINT}?${query.toString()}`);
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return {
+          success: false,
+          error: 'Invalid email or password',
+        };
+      }
+
+      return {
+        success: false,
+        error: await getErrorMessage(response, 'Login failed'),
+      };
+    }
+
+    const user = await response.json();
+
     return {
-      success: false,
-      error: 'Invalid email or password',
+      success: true,
+      token: `demo-session-${Date.now()}`,
+      user,
     };
   } catch (error) {
     return {

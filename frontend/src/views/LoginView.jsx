@@ -122,7 +122,7 @@ function LoginView({ onLogin }) {
         onSubmit={handleSubmit}
         isLoading={loading}
         isLocked={isLocked}
-        // showError={showError}
+        showError={showError}
       />
     </StyledLoginBackground>
   );
