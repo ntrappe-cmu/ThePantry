@@ -9,6 +9,9 @@ const StyledOrdersList = styled.div`
   width: 90%;
   gap: 20px;
   margin: auto;
+  // Make sure we all content inside can be scrolled above nav bar
+  padding-bottom: calc(2 * var(--menu-bar-height));
+  border: 1px solid yellow;
 
   h3 {
     margin-top: 10px;
