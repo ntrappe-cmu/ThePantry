@@ -20,6 +20,7 @@ import { VIEWS } from './constants/views.js';
 import LoginView from './views/LoginView';
 import HomeView from './views/HomeView';
 import OrdersView from './views/OrdersView';
+import HistoryView from './views/HistoryView.jsx';
 import NavBar from './components/NavBar/nav-bar';
 
 
@@ -67,7 +68,7 @@ function App() {
   const viewMap = {
     [VIEWS.HOME]: <HomeView />,
     [VIEWS.ORDERS]: <OrdersView />,
-    // [VIEWS.HISTORY]: <HistoryView />,
+    [VIEWS.HISTORY]: <HistoryView />,
     // [VIEWS.ACCOUNT]: <AccountView />,
   };
 

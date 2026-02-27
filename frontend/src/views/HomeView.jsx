@@ -5,18 +5,19 @@ import { fetchDonationCountForRegion, fetchDonationsForRegion, requestDonation }
 import { fetchOrderCountForUser } from '../services/ordersService';
 import { canRequestMoreOrders, isDonationRequestDisabled } from '../utils/orderCapacity';
 
+const SEARCH_AREA = { lat: 40.4406, lng: -79.9959, radius: 50 }; // STUB
+
 const StyledDonationsList = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
   gap: 20px;
-  margin: auto;
+  margin: 10px auto;
 `;
 
 function HomeView() {
   const [donations, setDonations] = useState([]);
   const [orderCount, setOrderCount] = useState(0);
-  const region = 'PA'; // STUB
   const userId = 1; // STUB
   const maxOrders = 4; // STUB
 
@@ -24,7 +25,7 @@ function HomeView() {
   // think about locally storing and populating instead
   useEffect(() => {
     const loadDonations = async () => {
-      const countResult = await fetchDonationCountForRegion(region);
+      const countResult = await fetchDonationCountForRegion(SEARCH_AREA);
 
       if (!countResult.success) {
         console.error(countResult.error || 'Failed to load donation count');
@@ -32,7 +33,7 @@ function HomeView() {
         return;
       }
 
-      const donationsResult = await fetchDonationsForRegion(region, countResult.count || 0);
+      const donationsResult = await fetchDonationsForRegion(SEARCH_AREA, countResult.count || 0);
 
       if (donationsResult.success) {
         setDonations(donationsResult.donations || []);
@@ -44,7 +45,7 @@ function HomeView() {
     };
 
     loadDonations();
-  }, [region]);
+  }, []);
 
   useEffect(() => {
     const loadOrderCount = async () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PickupCard from '../components/PickupCard/pickup-card';
-import { fetchOrdersForUser, removeOrderForUser } from '../services/ordersService';
+import { fetchOrdersForUser, removeOrderForUser, cancelOrderForUser } from '../services/ordersService';
 
 const StyledOrdersList = styled.div`
   display: flex;
@@ -9,6 +9,12 @@ const StyledOrdersList = styled.div`
   width: 90%;
   gap: 20px;
   margin: auto;
+
+  h3 {
+    margin-top: 10px;
+    font-weight: 300;
+    color: var(--fg-color-secondary);
+  }
 `;
 
 function OrdersView() {
@@ -43,7 +49,7 @@ function OrdersView() {
    * @param {*} donationId corresponding donation
    * @returns nothing
    */
-  const handlePickup = async (orderId, donationId) => {
+  const handlePickup = async ({ orderId, donationId }) => {
     console.log("Donation ID:", donationId, "Order ID:", orderId);
 
     const result = await removeOrderForUser(userId, orderId);
@@ -56,15 +62,34 @@ function OrdersView() {
     setOrders(prev => prev.filter(order => order.orderId !== orderId));
   };
 
+  const cancelDonation = async ({ orderId, donationId }) => {
+    console.log('Cancel donation ID:', donationId, 'Order ID:', orderId);
+
+    const result = await cancelOrderForUser(userId, orderId);
+    if (!result.success) {
+      console.error(result.error || 'Failed to cancel order');
+      return;
+    }
+
+    setOrders(prev => prev.filter(order => order.orderId !== orderId));
+  };
+
   return (
     <StyledOrdersList>
+      {orders.length === 0 && <h3>No active orders.</h3>}
       {orders.map(order => (
         <PickupCard 
           key={order.orderId}
-          title={order.title} 
+          pickedUp={false}
           orderId={order.orderId} 
           donationId={order.donationId}
-          onPickup={handlePickup}
+          itemTitle={order.itemTitle}
+          itemDescription={order.itemDescription}
+          itemQuantity={order.itemQuantity}
+          address={order.address}
+          contactInfo={order.contactInfo}
+          onStatusChange={handlePickup}
+          cancelDonation={cancelDonation}
         />
       ))}
     </StyledOrdersList>

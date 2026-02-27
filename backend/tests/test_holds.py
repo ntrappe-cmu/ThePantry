@@ -76,6 +76,7 @@ class TestCancelHold:
         cancel_resp = client.delete(f"/api/v1/holds/{hold_id}")
         assert cancel_resp.status_code == 200
         assert cancel_resp.get_json()["hold"]["status"] == "cancelled"
+        assert cancel_resp.get_json()["hold"]["cancelledAt"] is not None
 
         # Donation should be available again
         donations = client.get("/api/v1/donations").get_json()
@@ -111,6 +112,10 @@ class TestConfirmPickup:
         pickup_resp = client.post(f"/api/v1/holds/{hold_id}/pickup")
         assert pickup_resp.status_code == 200
         assert pickup_resp.get_json()["success"] is True
+
+        hold_resp = client.get(f"/api/v1/holds?userId={user_id}")
+        completed_hold = next(h for h in hold_resp.get_json() if h["id"] == hold_id)
+        assert completed_hold["completedAt"] is not None
 
         # Should appear in history
         history_resp = client.get(f"/api/v1/history?userId={user_id}")

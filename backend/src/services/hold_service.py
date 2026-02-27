@@ -6,6 +6,8 @@ Enforces the 2-hour reservation timeout. Responsible for ensuring
 no double-booking (each donation claimed by at most one recipient).
 """
 
+from datetime import datetime, timezone
+
 from extensions import db
 from models.hold import Hold, HoldStatus
 
@@ -122,6 +124,7 @@ class HoldService:
             return None
 
         hold.status = HoldStatus.CANCELLED
+        hold.cancelled_at = datetime.now(timezone.utc)
         db.session.commit()
         return hold
 
@@ -141,6 +144,7 @@ class HoldService:
             return None
 
         hold.status = HoldStatus.COMPLETED
+        hold.completed_at = datetime.now(timezone.utc)
         db.session.commit()
         return hold
 
