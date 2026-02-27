@@ -43,29 +43,15 @@ npm run dev
 
 3. Navigate to the url it points to. If you get a cross-origin block issue, that's likely the CORS configuration which needs to allow the Vite origin. If you patch this, you'll need to restart the backend.
 
-To run the frontend code locally:
+### Testing
 
-1. **Navigate to the directory:**
+- **Jest:** Fast unit/component tests (small scope, runs in JS/DOM test environment, good for utilities and component logic).
+- **Cypress:** End-to-end/integration UI tests (runs a real browser, exercises full user flows like login, ordering, navigation).
+
+To run locally:
 ```bash
 cd frontend
+npm i
+npm test # jest tests
+npx cypress open # e2e tests
 ```
-
-2. **Install dependencies & bundle:**
-```bash
-npm install
-npm run build
-```
-
-> [!NOTE]
-> Uses cypress `^15.10.0`, jest `^30.2.0`, react `^19.2.0`, and Vite.
-
-3. **Run development server:**
-```bash
-npm run dev
-```
-
-4. **Open in browser:** Navigate to the localhost link provided by Vite.
-
-### Backend
-
-### Testing
