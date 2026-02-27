@@ -136,10 +136,10 @@ function MenuBar({ activeView = VIEWS.HOME, onNavigate = () => {} }) {
       &lt;/MenuBarOption>
       
       {/* History Navigation Button */}
-      {/* &lt;MenuBarOption className={`menu-option-history ${activeView === VIEWS.HISTORY ? 'selected' : ''}`} onClick={() => onNavigate(VIEWS.HISTORY)}>
+      &lt;MenuBarOption className={`menu-option-history ${activeView === VIEWS.HISTORY ? 'selected' : ''}`} onClick={() => onNavigate(VIEWS.HISTORY)}>
         &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">&lt;path d="m480-256.16 146.15-146.15L584-444.46l-74 74v-178h-60v178l-74-74-42.15 42.15L480-256.16ZM215.39-140q-29.93 0-52.66-22.73Q140-185.46 140-215.39v-464.38q0-12.84 4.12-24.5 4.11-11.65 12.34-21.5l56.16-67.92q9.84-12.85 24.61-19.58Q252-820 268.46-820h422.31q16.46 0 31.42 6.73T747-793.69L803.54-725q8.23 9.85 12.34 21.69 4.12 11.85 4.12 24.7v463.22q0 29.93-22.73 52.66Q774.54-140 744.61-140H215.39Zm.23-563.84H744l-43.62-51.93q-1.92-1.92-4.42-3.08-2.5-1.15-5.19-1.15H268.85q-2.69 0-5.2 1.15-2.5 1.16-4.42 3.08l-43.61 51.93Z"/>&lt;/svg>
         &lt;h3>{capitalize(VIEWS.HISTORY)}&lt;/h3>
-      &lt;/MenuBarOption> */}
+      &lt;/MenuBarOption>
       
       {/* Account Navigation Button */}
       {/* &lt;MenuBarOption className={`menu-option-account ${activeView === VIEWS.ACCOUNT ? 'selected' : ''}`} onClick={() => onNavigate(VIEWS.ACCOUNT)}>
@@ -161,13 +161,13 @@ export default MenuBar;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#MenuBar">MenuBar</a></li><li><a href="global.html#MenuBarOption">MenuBarOption</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#PickupCard">PickupCard</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="global.html#StyledMenuBarWrapper">StyledMenuBarWrapper</a></li><li><a href="global.html#StyledNavBarWrapper">StyledNavBarWrapper</a></li><li><a href="global.html#StyledProgressBarFilled">StyledProgressBarFilled</a></li><li><a href="global.html#StyledStatusHeader">StyledStatusHeader</a></li><li><a href="global.html#VIEWS">VIEWS</a></li><li><a href="global.html#canRequestMoreOrders">canRequestMoreOrders</a></li><li><a href="global.html#fetchDonationCountForRegion">fetchDonationCountForRegion</a></li><li><a href="global.html#fetchDonationsForRegion">fetchDonationsForRegion</a></li><li><a href="global.html#fetchOrderCountForUser">fetchOrderCountForUser</a></li><li><a href="global.html#fetchOrdersForUser">fetchOrdersForUser</a></li><li><a href="global.html#isDonationRequestDisabled">isDonationRequestDisabled</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#logoutUser">logoutUser</a></li><li><a href="global.html#removeOrderForUser">removeOrderForUser</a></li><li><a href="global.html#requestDonation">requestDonation</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateLoginForm">validateLoginForm</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_BASE_URL">API_BASE_URL</a></li><li><a href="global.html#MenuBar">MenuBar</a></li><li><a href="global.html#MenuBarOption">MenuBarOption</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#PickupCard">PickupCard</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="global.html#StyledMenuBarWrapper">StyledMenuBarWrapper</a></li><li><a href="global.html#StyledNavBarWrapper">StyledNavBarWrapper</a></li><li><a href="global.html#StyledProgressBarFilled">StyledProgressBarFilled</a></li><li><a href="global.html#StyledWrapper">StyledWrapper</a></li><li><a href="global.html#VIEWS">VIEWS</a></li><li><a href="global.html#canRequestMoreOrders">canRequestMoreOrders</a></li><li><a href="global.html#cancelOrderForUser">cancelOrderForUser</a></li><li><a href="global.html#fetchDonationCountForRegion">fetchDonationCountForRegion</a></li><li><a href="global.html#fetchDonationsForRegion">fetchDonationsForRegion</a></li><li><a href="global.html#fetchHistoryForUser">fetchHistoryForUser</a></li><li><a href="global.html#fetchOrderCountForUser">fetchOrderCountForUser</a></li><li><a href="global.html#fetchOrdersForUser">fetchOrdersForUser</a></li><li><a href="global.html#isDonationRequestDisabled">isDonationRequestDisabled</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#logoutUser">logoutUser</a></li><li><a href="global.html#removeOrderForUser">removeOrderForUser</a></li><li><a href="global.html#requestDonation">requestDonation</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateLoginForm">validateLoginForm</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Feb 26 2026 19:50:44 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Feb 27 2026 01:03:43 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

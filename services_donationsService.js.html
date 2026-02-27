@@ -29,41 +29,86 @@
             <pre class="prettyprint source linenums"><code>/**
  * Donations Service
  *
- * Handles API calls related to browsing donations.
- * Currently stubbed—will connect to backend later.
+ * Handles API calls related to browsing and requesting donations.
  */
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:5000';
+const DONATIONS_ENDPOINT = `${API_BASE_URL}/api/v1/donations`;
+const HOLDS_ENDPOINT = `${API_BASE_URL}/api/v1/holds`;
+
+const REGION_COORDS = {
+  PA: { lat: 40.4406, lng: -79.9959, radius: 50 },
+  CA: { lat: 34.0522, lng: -118.2437, radius: 50 },
+};
+
+const mapDonationForUi = (donation) => ({
+  donationId: donation.id,
+  title: donation.description,
+  expirationDate: donation.expiresAt,
+  donationType: donation.donationType,
+  quantity: donation.quantity,
+  donorName: donation.donorName,
+  donorContact: donation.donorContact,
+  address: donation.address,
+  lat: donation.lat,
+  lng: donation.lng,
+  isHeld: donation.isHeld,
+});
+
+const resolveGeoParams = (regionOrParams) => {
+  if (regionOrParams &amp;&amp; typeof regionOrParams === 'object') {
+    return {
+      lat: Number(regionOrParams.lat ?? 0),
+      lng: Number(regionOrParams.lng ?? 0),
+      radius: Number(regionOrParams.radius ?? 50),
+    };
+  }
+
+  const regionKey = typeof regionOrParams === 'string' ? regionOrParams.toUpperCase() : '';
+  return REGION_COORDS[regionKey] || { lat: 0, lng: 0, radius: 50 };
+};
+
+const getErrorMessage = async (response, fallbackMessage) => {
+  try {
+    const payload = await response.json();
+    if (payload?.error) {
+      return payload.error;
+    }
+  } catch {
+    // ignore JSON parse errors and use fallback
+  }
+
+  return `${fallbackMessage} (${response.status})`;
+};
 
 /**
  * Fetch total donation count for a specific region.
  *
- * @param {string} region - Region code (e.g. 'PA', 'CA')
+ * @param {string|object} regionOrParams - Region code (e.g. 'PA') or geo params { lat, lng, radius }
  * @returns {Promise&lt;object>} { success: boolean, count?: number, error?: string }
  */
-export const fetchDonationCountForRegion = async (region) => {
+export const fetchDonationCountForRegion = async (regionOrParams) => {
   try {
-    // TODO: Replace with actual backend call
-    // Stubbed as:
-    //   const response = await fetch(`/api/donations/count?region=${region}`);
-    //   const data = await response.json();
-    //   return { success: true, count: data.count };
+    const { lat, lng, radius } = resolveGeoParams(regionOrParams);
+    const query = new URLSearchParams({
+      lat: String(lat),
+      lng: String(lng),
+      radius: String(radius),
+    });
 
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    const response = await fetch(`${DONATIONS_ENDPOINT}?${query.toString()}`);
+    if (!response.ok) {
+      return {
+        success: false,
+        error: await getErrorMessage(response, 'Failed to fetch donation count'),
+      };
+    }
 
-    const donationDataByRegion = {
-      PA: [
-        { donationId: 2001, title: 'Fresh Bread Box', expirationDate: '2026-02-24' },
-        { donationId: 2002, title: 'Dairy Bundle', expirationDate: '2026-02-23' },
-        { donationId: 2003, title: 'Canned Goods Pack', expirationDate: '2026-03-10' },
-      ],
-      CA: [
-        { donationId: 3001, title: 'Produce Crate', expirationDate: '2026-02-25' },
-        { donationId: 3002, title: 'Prepared Meals', expirationDate: '2026-02-22' },
-      ],
-    };
+    const donations = await response.json();
 
     return {
       success: true,
-      count: (donationDataByRegion[region] || []).length,
+      count: Array.isArray(donations) ? donations.length : 0,
     };
   } catch (error) {
     return {
@@ -77,34 +122,36 @@ export const fetchDonationCountForRegion = async (region) => {
  * Fetch up to N donations for a specific region.
  * (To make sure we can selectively populate DOM and not overwhelm it)
  *
-* @param {string} region - Region code (e.g. 'PA', 'CA')
+* @param {string|object} regionOrParams - Region code (e.g. 'PA') or geo params { lat, lng, radius }
 * @param {number} limit - Max number of donations to fetch
 * @returns {Promise&lt;object>} { success: boolean, donations?: Array&lt;{donationId:number, title:string, expirationDate:string}>, error?: string }
  */
-export const fetchDonationsForRegion = async (region, limit) => {
+export const fetchDonationsForRegion = async (regionOrParams, limit) => {
   try {
-    // TODO: Replace with actual backend call
-    // STubbed as:
-    //   const response = await fetch(`/api/donations?region=${region}&amp;limit=${limit}`);
-    //   const data = await response.json();
-    //   return { success: true, donations: data.donations };
+    const { lat, lng, radius } = resolveGeoParams(regionOrParams);
+    const query = new URLSearchParams({
+      lat: String(lat),
+      lng: String(lng),
+      radius: String(radius),
+    });
 
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    const response = await fetch(`${DONATIONS_ENDPOINT}?${query.toString()}`);
+    if (!response.ok) {
+      return {
+        success: false,
+        error: await getErrorMessage(response, 'Failed to fetch donations'),
+      };
+    }
 
-    const donationDataByRegion = {
-      PA: [
-        { donationId: 2001, title: 'Fresh Bread Box', expirationDate: '2026-02-24' },
-        { donationId: 2002, title: 'Dairy Bundle', expirationDate: '2026-02-23' },
-        { donationId: 2003, title: 'Canned Goods Pack', expirationDate: '2026-03-10' },
-      ],
-      CA: [
-        { donationId: 3001, title: 'Produce Crate', expirationDate: '2026-02-25' },
-        { donationId: 3002, title: 'Prepared Meals', expirationDate: '2026-02-22' },
-      ],
-    };
+    const rawDonations = await response.json();
+    const mappedDonations = Array.isArray(rawDonations)
+      ? rawDonations.map(mapDonationForUi)
+      : [];
 
     const requestedLimit = Number.isFinite(limit) ? Math.max(0, Math.floor(limit)) : 0;
-    const donations = (donationDataByRegion[region] || []).slice(0, requestedLimit);
+    const donations = requestedLimit > 0
+      ? mappedDonations.slice(0, requestedLimit)
+      : mappedDonations;
 
     return {
       success: true,
@@ -127,15 +174,6 @@ export const fetchDonationsForRegion = async (region, limit) => {
  */
 export const requestDonation = async (donationId, userId = null) => {
   try {
-    // TODO: Replace with actual backend call
-    // await fetch('/api/donations/request', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ donationId, userId }),
-    // });
-
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
     if (!donationId) {
       return {
         success: false,
@@ -143,7 +181,33 @@ export const requestDonation = async (donationId, userId = null) => {
       };
     }
 
-    return { success: true };
+    if (userId === null || userId === undefined || userId === '') {
+      return {
+        success: false,
+        error: 'userId is required',
+      };
+    }
+
+    const response = await fetch(HOLDS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ donationId, userId }),
+    });
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: await getErrorMessage(response, 'Failed to request donation'),
+      };
+    }
+
+    const data = await response.json();
+
+    return {
+      success: true,
+      hold: data.hold,
+      donation: data.donation,
+    };
   } catch (error) {
     return {
       success: false,
@@ -161,13 +225,13 @@ export const requestDonation = async (donationId, userId = null) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#MenuBar">MenuBar</a></li><li><a href="global.html#MenuBarOption">MenuBarOption</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#PickupCard">PickupCard</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="global.html#StyledMenuBarWrapper">StyledMenuBarWrapper</a></li><li><a href="global.html#StyledNavBarWrapper">StyledNavBarWrapper</a></li><li><a href="global.html#StyledProgressBarFilled">StyledProgressBarFilled</a></li><li><a href="global.html#StyledStatusHeader">StyledStatusHeader</a></li><li><a href="global.html#VIEWS">VIEWS</a></li><li><a href="global.html#canRequestMoreOrders">canRequestMoreOrders</a></li><li><a href="global.html#fetchDonationCountForRegion">fetchDonationCountForRegion</a></li><li><a href="global.html#fetchDonationsForRegion">fetchDonationsForRegion</a></li><li><a href="global.html#fetchOrderCountForUser">fetchOrderCountForUser</a></li><li><a href="global.html#fetchOrdersForUser">fetchOrdersForUser</a></li><li><a href="global.html#isDonationRequestDisabled">isDonationRequestDisabled</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#logoutUser">logoutUser</a></li><li><a href="global.html#removeOrderForUser">removeOrderForUser</a></li><li><a href="global.html#requestDonation">requestDonation</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateLoginForm">validateLoginForm</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_BASE_URL">API_BASE_URL</a></li><li><a href="global.html#MenuBar">MenuBar</a></li><li><a href="global.html#MenuBarOption">MenuBarOption</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#PickupCard">PickupCard</a></li><li><a href="global.html#ProgressBar">ProgressBar</a></li><li><a href="global.html#StyledMenuBarWrapper">StyledMenuBarWrapper</a></li><li><a href="global.html#StyledNavBarWrapper">StyledNavBarWrapper</a></li><li><a href="global.html#StyledProgressBarFilled">StyledProgressBarFilled</a></li><li><a href="global.html#StyledWrapper">StyledWrapper</a></li><li><a href="global.html#VIEWS">VIEWS</a></li><li><a href="global.html#canRequestMoreOrders">canRequestMoreOrders</a></li><li><a href="global.html#cancelOrderForUser">cancelOrderForUser</a></li><li><a href="global.html#fetchDonationCountForRegion">fetchDonationCountForRegion</a></li><li><a href="global.html#fetchDonationsForRegion">fetchDonationsForRegion</a></li><li><a href="global.html#fetchHistoryForUser">fetchHistoryForUser</a></li><li><a href="global.html#fetchOrderCountForUser">fetchOrderCountForUser</a></li><li><a href="global.html#fetchOrdersForUser">fetchOrdersForUser</a></li><li><a href="global.html#isDonationRequestDisabled">isDonationRequestDisabled</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#logoutUser">logoutUser</a></li><li><a href="global.html#removeOrderForUser">removeOrderForUser</a></li><li><a href="global.html#requestDonation">requestDonation</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateLoginForm">validateLoginForm</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Feb 26 2026 19:50:44 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Feb 27 2026 01:03:43 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

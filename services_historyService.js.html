@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: services/authService.js</title>
+    <title>JSDoc: Source: services/historyService.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: services/authService.js</h1>
+    <h1 class="page-title">Source: services/historyService.js</h1>
 
     
 
@@ -27,15 +27,15 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Authentication Service
- * 
- * Handles all API calls related to user authentication.
- * Password checking is currently frontend-only for MVP.
+ * History Service
+ *
+ * Fetches user history timeline data by combining holds and pickup history.
  */
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:5000';
-const USERS_LOOKUP_ENDPOINT = `${API_BASE_URL}/api/v1/users/lookup`;
-const DEMO_PASSWORD = '123456';
+const HOLDS_ENDPOINT = `${API_BASE_URL}/api/v1/holds`;
+const HISTORY_ENDPOINT = `${API_BASE_URL}/api/v1/history`;
+const DONATIONS_ENDPOINT = `${API_BASE_URL}/api/v1/donations`;
 
 const getErrorMessage = async (response, fallbackMessage) => {
   try {
@@ -51,96 +51,87 @@ const getErrorMessage = async (response, fallbackMessage) => {
 };
 
 /**
- * Authenticate user with email and password
- * 
- * @param {string} email - User email address
- * @param {string} password - User password
- * @returns {Promise&lt;object>} { success: boolean, token?: string, error?: string }
+ * Fetch combined history records for a user.
+ *
+ * Output shape is directly consumable by HistoryLog:
+ * { id, donationName, requestedAt, pickedUpAt }
  */
-export const loginUser = async (email, password) => {
+export const fetchHistoryForUser = async (userId) => {
   try {
-    if (!email || !password) {
+    if (userId === null || userId === undefined || userId === '') {
       return {
         success: false,
-        error: 'Email and password are required',
+        error: 'userId is required',
       };
     }
 
-    // MVP behavior: only check password in frontend, never send it to backend.
-    if (password !== DEMO_PASSWORD) {
+    const holdsQuery = new URLSearchParams({ userId: String(userId) });
+    const pickupQuery = new URLSearchParams({ userId: String(userId) });
+
+    const [holdsResponse, pickupHistoryResponse, donationsResponse] = await Promise.all([
+      fetch(`${HOLDS_ENDPOINT}?${holdsQuery.toString()}`),
+      fetch(`${HISTORY_ENDPOINT}?${pickupQuery.toString()}`),
+      fetch(`${DONATIONS_ENDPOINT}?showAll=true`),
+    ]);
+
+    if (!holdsResponse.ok) {
       return {
         success: false,
-        error: 'Invalid email or password',
+        error: await getErrorMessage(holdsResponse, 'Failed to fetch holds history'),
       };
     }
 
-    const query = new URLSearchParams({ email });
-    const response = await fetch(`${USERS_LOOKUP_ENDPOINT}?${query.toString()}`);
+    if (!pickupHistoryResponse.ok) {
+      return {
+        success: false,
+        error: await getErrorMessage(pickupHistoryResponse, 'Failed to fetch pickup history'),
+      };
+    }
 
-    if (!response.ok) {
-      if (response.status === 404) {
+    const holds = await holdsResponse.json();
+    const pickupHistory = await pickupHistoryResponse.json();
+    const donations = donationsResponse.ok ? await donationsResponse.json() : [];
+
+    const donationById = new Map(
+      (Array.isArray(donations) ? donations : []).map((donation) => [donation.id, donation]),
+    );
+
+    const pickupByDonationId = new Map(
+      (Array.isArray(pickupHistory) ? pickupHistory : []).map((record) => [record.donationId, record]),
+    );
+
+    const records = (Array.isArray(holds) ? holds : [])
+      .filter((hold) => hold.status === 'completed')
+      .map((hold) => {
+        const donation = donationById.get(hold.donationId);
+        const pickupRecord = pickupByDonationId.get(hold.donationId);
+
         return {
-          success: false,
-          error: 'Invalid email or password',
+          id: hold.id,
+          donationName:
+            pickupRecord?.donationDescription ||
+            donation?.description ||
+            `Donation ${hold.donationId}`,
+          requestedAt: hold.createdAt || null,
+          pickedUpAt: pickupRecord?.completedAt || hold.completedAt || null,
         };
-      }
+      });
 
-      return {
-        success: false,
-        error: await getErrorMessage(response, 'Login failed'),
-      };
-    }
-
-    const user = await response.json();
+    records.sort((a, b) => {
+      const aTime = new Date(a.requestedAt || 0).getTime();
+      const bTime = new Date(b.requestedAt || 0).getTime();
+      return bTime - aTime;
+    });
 
     return {
       success: true,
-      token: `demo-session-${Date.now()}`,
-      user,
+      records,
     };
   } catch (error) {
     return {
       success: false,
-      error: error.message || 'Login failed. Please try again.',
+      error: error.message || 'Failed to fetch history',
     };
-  }
-};
-
-/**
- * Logout user
- * 
- * @returns {Promise&lt;object>} { success: boolean }
- */
-export const logoutUser = async () => {
-  try {
-    // TODO: Replace with actual backend call
-    // return fetch('/api/auth/logout', { method: 'POST' })
-    //   .then(res => res.json());
-    console.log("omg logout");
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
-
-/**
- * Verify if a token is still valid
- * 
- * @param {string} token - JWT token to verify
- * @returns {Promise&lt;object>} { isValid: boolean }
- */
-export const verifyToken = async (token) => {
-  try {
-    // TODO: Replace with actual backend call
-    // return fetch('/api/auth/verify', {
-    //   headers: { 'Authorization': `Bearer ${token}` }
-    // }).then(res => res.json());
-
-    // STUB: Check if token exists and is recent
-    return { isValid: !!token };
-  } catch (error) {
-    return { isValid: false };
   }
 };
 </code></pre>
